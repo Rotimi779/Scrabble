@@ -24,7 +24,7 @@ public class Main {
         boolean play = true;
         int turn = 2;
         System.out.println("Welcome to the Game of Scrabble");
-
+        Scanner input = new Scanner(System.in);
         while(play){
             if (turn == 1){
                 turn = 2;
@@ -36,13 +36,23 @@ public class Main {
             }
 
             System.out.println("Player " + String.valueOf(turn)  +"'s turn");
+            currentPlayer.displayTiles();
+            System.out.print("Type a word ");
+            String userInput = input.nextLine().trim().toLowerCase();
+            while(!wordDictionary.containsWord(userInput) ){
+                System.out.println("The word is not in the dictionary");
+                System.out.println("Type a new word ");
+                userInput = input.nextLine().trim().toLowerCase();
+            }
+            board.place(userInput,'H',0,0);
+            board.display();
 
-            //
-            Scanner tilePick = new Scanner(System.in);
+
+            //For picking a tile
             System.out.print("Do you want to pick a tile? (yes/no): ");
-            String userInput = tilePick.nextLine().trim().toLowerCase();
+            String tileInput = input.nextLine().trim().toLowerCase();
             while(true){
-                if (userInput.equals("yes")) {
+                if (tileInput.equals("yes")) {
                     System.out.println("Pick a tile");
                     boolean validPick1 = false;
                     while(!(validPick1)){
@@ -50,17 +60,19 @@ public class Main {
                         currentPlayer.displayTiles();
                         validPick1 = true;
                     }
-                } else if (userInput.equals("no")) {
-                    continue;
+                    break;
+                } else if (tileInput.equals("no")) {
+                    break;
                 } else {
                     System.out.println("Invalid input. Please respond with 'yes' or 'no'.");
                 }
-                tilePick.close();
+
             }
 
-            play = false;
+            //abplay = false;
 
         }
+        input.close();
     }
 
 
