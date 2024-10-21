@@ -39,12 +39,20 @@ public class Main {
             currentPlayer.displayTiles();
             System.out.print("Type a word ");
             String userInput = input.nextLine().trim().toLowerCase();
-            while(!wordDictionary.containsWord(userInput) ){
-                System.out.println("The word is not in the dictionary");
-                System.out.println("Type a new word ");
-                userInput = input.nextLine().trim().toLowerCase();
+            while((!wordDictionary.containsWord(userInput)) ||  (!currentPlayer.canFormWordFromTiles(userInput))){
+                if(!currentPlayer.canFormWordFromTiles(userInput)){
+                    System.out.println("The word cannot be formed from the available tiles");
+                    System.out.println("Type a new word ");
+                    userInput = input.nextLine().trim().toLowerCase();
+                }
+                else if(!wordDictionary.containsWord(userInput)){
+                    System.out.println("The word is not in the dictionary");
+                    System.out.println("Type a new word ");
+                    userInput = input.nextLine().trim().toLowerCase();
+                }
             }
             board.place(userInput,'H',0,0);
+            currentPlayer.updatePlayerScore();
             board.display();
 
 
