@@ -10,21 +10,28 @@ public class Main {
 
 
     public static void main(String[] args) {
+        // initializations
         TileBag tilebag = new TileBag();
         String url = "https://www.mit.edu/~ecprice/wordlist.10000";
         WordDictionary wordDictionary = new WordDictionary(url);
         Player player1 = new Player();
         Player player2 = new Player();
         Player currentPlayer = new Player();
+
+        // Give the players their tiles
         for (int i = 0; i < 7; i ++){
             player1.addTile(tilebag);
             player2.addTile(tilebag);
         }
+
+        // Initialize the board and start the game
         Board board = new Board();
         boolean play = true;
         int turn = 2;
         System.out.println("Welcome to the Game of Scrabble");
         Scanner input = new Scanner(System.in);
+
+        // game is in play
         while(play){
             if (turn == 1){
                 turn = 2;
