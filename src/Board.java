@@ -1,13 +1,9 @@
 public class Board {
     //attributes
     char[][] board;
-    String word;
-    char direction;
-    int row;
-    int column;
 
 
-
+    
     //constructor
     public Board(){
         board = new char[15][15];
@@ -41,14 +37,38 @@ public class Board {
     }
 
     public boolean isValidPlacement(String word, char direction, int row, int column){
+
         // checking out of bounds
         if( direction == 'H' && (column + word.length()) > 15){
             return false;
         } else if ( direction == 'V' && (row + word.length()) > 15) {
             return false;
         }
+
+        //checking for intersection (does not account for parallel placement yet)
+        for ( int i=0; i < word.length(); i++){
+
+            char characterOnBoard;
+
+            if (direction == 'H'){
+                characterOnBoard = board[row][column + i];
+            } else if (direction == 'V') {
+                characterOnBoard = board[row + i][column];
+            }else{
+                return false;
+            }
+
+            if (characterOnBoard != '-'){
+                if (word.charAt(i) != characterOnBoard){
+                    return false;
+                }
+            }
+        }
         return true;
     }
+
+
+
 
 
 
