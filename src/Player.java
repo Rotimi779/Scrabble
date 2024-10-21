@@ -1,6 +1,9 @@
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
+import java.util.HashMap;
+import java.util.Map;
+
 
 public class Player {
     private int score;
@@ -43,12 +46,39 @@ public class Player {
         }
     }
 
-    public void updatePlayerScore(char letter){
-        int number = getScore(letter);
+    public void updatePlayerScore(String word){
+        for(char i: word.toCharArray()){
+
+        }
         score += number;
     }
 
     public int getPlayerScore(){
         return this.score;
+    }
+
+    public  boolean canFormWordFromTiles(String word) {
+        // Step 1: Count the available tiles
+        Map<Character, Integer> tileCount = new HashMap<>();
+        for (Tiles tile : tiles) {
+            char character = Character.toLowerCase(tile.getLetter());
+            tileCount.put(character, tileCount.getOrDefault(character, 0) + 1);
+        }
+
+
+
+        // Step 2: Check each letter in the word
+        for (char letter : word.toCharArray()) {
+            if (tileCount.containsKey(letter) && tileCount.get(letter) > 0) {
+                // Decrease count for the letter
+                tileCount.put(letter, tileCount.get(letter) - 1);
+            } else {
+                // Letter not available or used up
+                return false;
+            }
+        }
+
+        // Step 3: The word can be formed
+        return true;
     }
 }
