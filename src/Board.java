@@ -17,14 +17,25 @@ public class Board {
 
 
     //methods
-    public void place(String word, char direction, int row, int column){
+    public boolean place(String word, char direction, int row, int column){
         for (int i=0; i< word.length(); i++){
             if (direction == 'H'){
-                board[row][column + i] = word.charAt(i);
+                if (this.isValidPlacement(word, direction, row, column)){
+                    board[row][column + i] = word.charAt(i);
+                }else {
+                    System.out.println("Invalid placement");
+                    return false;
+                }
             } else if (direction == 'V') {
-                board[row + i][column] = word.charAt(i);
+                if (this.isValidPlacement(word, direction, row, column)){
+                    board[row + i][column] = word.charAt(i);
+                }else{
+                    System.out.println("Invalid placement");
+                    return false;
+                }
             }
         }
+        return true;
     }
 
     public void display(){

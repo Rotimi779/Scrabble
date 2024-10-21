@@ -58,23 +58,28 @@ public class Main {
                     userInput = input.nextLine().trim().toLowerCase();
                 }
             }
-            System.out.println("Where do you want to place the word? ");
-            System.out.println("Row: ");
-            int row = input.nextInt();
-            input.nextLine();
-            System.out.println("Column: ");
-            int column = input.nextInt();
-            input.nextLine();
-            System.out.println("H (Horizontal) or V (Vertical)? ");
-            String direction = input.nextLine().trim().toLowerCase();
-            if (direction.equals("horizontal") || direction.equals("h")){
-                board.place(userInput,'H',row,column);
+            boolean placed = false;
+            while(!placed){
+                System.out.println("Where do you want to place the word? ");
+                System.out.println("Row: ");
+                int row = input.nextInt();
+                input.nextLine();
+                System.out.println("Column: ");
+                int column = input.nextInt();
+                input.nextLine();
+                System.out.println("H (Horizontal) or V (Vertical)? ");
+                String direction = input.nextLine().trim().toLowerCase();
 
-            }else if(direction.equals("vertical") || direction.equals("v")){
-                board.place(userInput,'V',row,column);
-            }else{
-                System.out.println("Invalid direction");
+                if (direction.equals("horizontal") || direction.equals("h")){
+                    placed = board.place(userInput,'H',row,column);
+
+                }else if(direction.equals("vertical") || direction.equals("v")){
+                    placed = board.place(userInput,'V',row,column);
+                }else{
+                    System.out.println("Invalid direction");
+                }
             }
+
 
             currentPlayer.updatePlayerScore(userInput);
             currentPlayer.displayTiles();
