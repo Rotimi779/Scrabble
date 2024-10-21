@@ -40,5 +40,16 @@ public class Board {
         }
     }
 
+    public boolean isValidPlacement(String word, char direction, int row, int column){
+        // checking out of bounds
+        if( direction == 'H' && (column + word.length()) > 15){
+            return false;
+        } else if ( direction == 'V' && (row + word.length()) > 15) {
+            return false;
+        }
+        return true;
+    }
+
+
 
 }
