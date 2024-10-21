@@ -46,13 +46,16 @@ public class Player {
         }
     }
 
-    public void updatePlayerScore(String word){
-        for(char i: word.toCharArray()){
-            for (Tiles tile: tiles){
-                if (Character.toLowerCase(tile.getLetter()) == i){
+    public void updatePlayerScore(String word) {
+        Iterator<Tiles> iterator = tiles.iterator();
+        for (char i : word.toCharArray()) {
+            while (iterator.hasNext()) {
+                Tiles tile = iterator.next();
+                if (Character.toLowerCase(tile.getLetter()) == i) {
                     score += tile.getScore();
-                    tiles.remove(tile);
+                    iterator.remove();  // Use iterator to remove the tile
                     System.out.println("New Score: " + this.score);
+                    break;
                 }
             }
         }

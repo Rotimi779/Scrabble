@@ -44,7 +44,7 @@ public class Main {
 
             System.out.println("Player " + String.valueOf(turn)  +"'s turn");
             currentPlayer.displayTiles();
-            System.out.print("Type a word ");
+            System.out.print("Type a word: ");
             String userInput = input.nextLine().trim().toLowerCase();
             while((!wordDictionary.containsWord(userInput)) ||  (!currentPlayer.canFormWordFromTiles(userInput))){
                 if(!currentPlayer.canFormWordFromTiles(userInput)){
@@ -54,11 +54,28 @@ public class Main {
                 }
                 else if(!wordDictionary.containsWord(userInput)){
                     System.out.println("The word is not in the dictionary");
-                    System.out.println("Type a new word ");
+                    System.out.println("Type a new word: ");
                     userInput = input.nextLine().trim().toLowerCase();
                 }
             }
-            board.place(userInput,'H',0,0);
+            System.out.println("Where do you want to place the word? ");
+            System.out.println("Row: ");
+            int row = input.nextInt();
+            input.nextLine();
+            System.out.println("Column: ");
+            int column = input.nextInt();
+            input.nextLine();
+            System.out.println("H (Horizontal) or V (Vertical)? ");
+            String direction = input.nextLine().trim().toLowerCase();
+            if (direction.equals("horizontal") || direction.equals("h")){
+                board.place(userInput,'H',row,column);
+
+            }else if(direction.equals("vertical") || direction.equals("v")){
+                board.place(userInput,'V',row,column);
+            }else{
+                System.out.println("Invalid direction");
+            }
+
             currentPlayer.updatePlayerScore(userInput);
             currentPlayer.displayTiles();
             board.display();
