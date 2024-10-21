@@ -52,7 +52,10 @@ public class TileBag {
         if (bag.isEmpty()) {
             throw new NoSuchElementException("The bag is empty!");
         }
-        return bag.remove(random.nextInt(bag.size()));
+        int index = random.nextInt(bag.size());
+        Tiles tile = bag.get(index);
+        bag.remove(index);
+        return tile;
     }
 
     // Return a tile to the bag

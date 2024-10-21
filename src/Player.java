@@ -11,8 +11,8 @@ public class Player {
         this.score = 0;
     }
 
-    public void addTile(char letter, int score){
-        tiles.add(new Tiles(letter, score));
+    public void addTile(TileBag tileBag){
+        tiles.add(tileBag.drawTile());
     }
 
     public int getScore(char letter){
@@ -39,7 +39,7 @@ public class Player {
     public void displayTiles() {
         System.out.println("Player's Tiles:");
         for (Tiles tile : tiles) {
-            System.out.println(tile);
+            System.out.println("Tile: " + tile.getLetter() + " Score: " + tile.getScore());
         }
     }
 

@@ -1,13 +1,13 @@
 public class Tiles {
-    private int letter;
+    private char letter;
     private int score;
 
-    public Tiles(int letter, int score){
+    public Tiles(char letter, int score){
         this.letter = letter;
         this.score = score;
     }
 
-    public int getLetter(){
+    public char getLetter(){
         return this.letter;
     }
 
