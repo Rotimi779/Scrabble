@@ -52,7 +52,8 @@ public class Main {
                 }
             }
             board.place(userInput,'H',0,0);
-            currentPlayer.updatePlayerScore();
+            currentPlayer.updatePlayerScore(userInput);
+            currentPlayer.displayTiles();
             board.display();
 
 
