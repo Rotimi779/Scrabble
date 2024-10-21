@@ -48,9 +48,14 @@ public class Player {
 
     public void updatePlayerScore(String word){
         for(char i: word.toCharArray()){
-
+            for (Tiles tile: tiles){
+                if (Character.toLowerCase(tile.getLetter()) == i){
+                    score += tile.getScore();
+                    tiles.remove(tile);
+                    System.out.println("New Score: " + this.score);
+                }
+            }
         }
-        score += number;
     }
 
     public int getPlayerScore(){
