@@ -24,7 +24,7 @@ At the moment to check if a placement is valid the program:
 - Checks each letter in the players word for any adjacent tiles, ensuring the word connects to a previous word past the first turn
 - Checks to see if the character in a certain position in the player's word is the same as the word that is placed on the board
 
-The third check is supposed to allow interseciton of words however a player will not allow the player to play that word because they do not have the letter that they want ot overlap
+The third check is supposed to allow interseciton of words however a player will not allow the player to play that word because they do not have the letter that they want to overlap
 
 ## Future implementation
 ### Adding of points when 2 words are created
