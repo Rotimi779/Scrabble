@@ -74,4 +74,8 @@ public class TileBag {
             System.out.println(tile.getLetter() + ": " + tile.getScore());
         }
     }
+
+    public List<Tiles> getBag() {
+        return bag;
+    }
 }

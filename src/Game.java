@@ -37,9 +37,19 @@ public class Game {
 
     public void play(){
         boolean finished = false;
-        while (!finished){
+
+        while (!finished){ //
             currentPlayer.playTurn();
             switchTurn();
+            if (tilebag.getBag().isEmpty()){
+                for (Player player : players){
+                    if (player.getTiles().isEmpty()){
+                        finished = true;
+                        break;
+                    }
+                }
+
+            }
         }
         Player.close();
     }
@@ -57,5 +67,60 @@ public class Game {
 
     public int getRound(){
         return this.round;
+    }
+
+    public static boolean isValidPlacement(String word, char direction, int row, int column){
+
+        // checking out of bounds
+        if( direction == 'H' && (column + word.length()) > 15){
+            return false;
+        } else if ( direction == 'V' && (row + word.length()) > 15) {
+            return false;
+        }
+
+        boolean hasAdjacent = false;
+        int currentRound = round;
+
+        for ( int i=0; i < word.length(); i++){
+
+            char characterOnBoard;
+
+            // setting the board character
+            if (direction == 'H'){
+                characterOnBoard = board.getBoard()[row][column + i];
+            } else if (direction == 'V') {
+                characterOnBoard = board.getBoard()[row + i][column];
+            }else{
+                return false;
+            }
+
+            // comparing the board character with word character
+            if (characterOnBoard != '-'){
+                if (word.charAt(i) != characterOnBoard){
+                    return false;
+                }
+            }
+
+            // checking for adjacent words
+            if (currentRound > 1){
+                if (direction == 'H'){
+                    if (row > 0 && board.getBoard()[row - 1][column + i] != '-') {
+                        hasAdjacent = true;
+                    }
+                    if (row < 14 && board.getBoard()[row + 1][column + i] != '-') {
+                        hasAdjacent = true;
+                    }
+                } else if (direction == 'V') {
+                    if (column > 0 && board.getBoard()[row + i][column - 1] != '-') {
+                        hasAdjacent = true;
+                    }
+                    if (column < 14 && board.getBoard()[row + i][column + 1] != '-') {
+                        hasAdjacent = true;
+                    }
+                }
+            }
+
+        }
+        return currentRound <= 1 || hasAdjacent;
     }
 }

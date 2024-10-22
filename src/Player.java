@@ -52,16 +52,17 @@ public class Player {
     public void updatePlayerScore(String word) {
         Iterator<Tiles> iterator = tiles.iterator();
         for (char i : word.toCharArray()) {
+            score += getScore(i);
             while (iterator.hasNext()) {
                 Tiles tile = iterator.next();
                 if (Character.toLowerCase(tile.getLetter()) == i) {
                     score += tile.getScore();
                     iterator.remove();  // Use iterator to remove the tile
-                    System.out.println("New Score: " + this.score);
                     break;
                 }
             }
         }
+        System.out.println("New Score: " + score);
     }
 
     public void playTurn(){
@@ -97,6 +98,29 @@ public class Player {
         }
     }
 
+    //methods
+    public boolean place(String word, char direction, int row, int column){
+        for (int i=0; i< word.length(); i++){
+            if (direction == 'H'){
+                if (Game.isValidPlacement(word, direction, row, column)){
+                    Game.board.getBoard()[row][column + i] = word.charAt(i);
+                }else {
+                    System.out.println("Invalid placement");
+                    return false;
+                }
+            } else if (direction == 'V') {
+                if (Game.isValidPlacement(word, direction, row, column)){
+                    Game.board.getBoard()[row + i][column] = word.charAt(i);
+                }else{
+                    System.out.println("Invalid placement");
+                    playTurn();
+                    return false;
+                }
+            }
+        }
+        return true;
+    }
+
     public void placeWord(String word) {
         boolean placed = false;
         while(!placed){
@@ -111,10 +135,9 @@ public class Player {
             String direction = input.nextLine().trim().toLowerCase();
 
             if (direction.equals("horizontal") || direction.equals("h")){
-                placed = Game.board.place(word,'H',row,column);
-
+                placed = place(word,'H',row,column);
             }else if(direction.equals("vertical") || direction.equals("v")){
-                placed = Game.board.place(word,'V',row,column);
+                placed = place(word,'V',row,column);
             }else{
                 System.out.println("Invalid direction");
             }
@@ -122,29 +145,22 @@ public class Player {
     }
 
     public void pickTile() {
-        //For picking a tile
-        System.out.print("Do you want to pick a tile? (yes/no): ");
-        String tileInput = input.nextLine().trim().toLowerCase();
-        while(true){
-            if (tileInput.equals("yes") || tileInput.equals("y") && this.getNumberOfTiles() < 7) {
-                System.out.println("Pick a tile");
-                boolean validPick1 = false;
-                while(!(validPick1)){
-                    this.addTile(Game.tilebag);
-                    validPick1 = true;
-                }
+        //For refilling players tiles
+        while(this.getNumberOfTiles() < 7){
+            if (Game.tilebag.getBag().isEmpty()){
+                System.out.println("The tile bag is empty");
                 break;
-            } else if (tileInput.equals("no")) {
-                break;
-            } else {
-                System.out.println("Invalid input. Please respond with 'yes' or 'no'.");
             }
-
+            this.addTile(Game.tilebag);
         }
     }
 
     public int getNumberOfTiles() {
         return tiles.size();
+    }
+
+    public List<Tiles> getTiles() {
+        return tiles;
     }
 
     public int getPlayerScore(){
