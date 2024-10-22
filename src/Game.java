@@ -87,7 +87,7 @@ public class Game {
             currentPlayer = players.get(1);
         } else if (turn == 2) {
             turn = 1;
-            currentPlayer = players.getFirst();
+            currentPlayer = players.get(0);
         }
     }
 
