@@ -136,4 +136,8 @@ public class Game {
 
         }
     }
+
+    public int getRound(){
+        return this.round;
+    }
 }
