@@ -30,7 +30,7 @@ public class Game {
         players.add(player2);
 
         // Initialize the board and start the game
-        board = new Board();
+        board = new Board(this);
         turn = 1;
         System.out.println("Welcome to the Game of Scrabble");
     }

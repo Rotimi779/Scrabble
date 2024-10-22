@@ -1,11 +1,14 @@
 public class Board {
     //attributes
     char[][] board;
+    private Game game;
+
 
 
 
     //constructor
-    public Board(){
+    public Board(Game game){
+        this.game = game;
         board = new char[15][15];
         for (int i = 0; i < 15; i++) {
             for (int j = 0; j < 15; j++) {
@@ -56,11 +59,14 @@ public class Board {
             return false;
         }
 
-        //checking for intersection (does not account for parallel placement yet)
+        boolean hasAdjacent = false;
+        int currentRound = game.getRound();
+
         for ( int i=0; i < word.length(); i++){
 
             char characterOnBoard;
 
+            // setting the board character
             if (direction == 'H'){
                 characterOnBoard = board[row][column + i];
             } else if (direction == 'V') {
@@ -69,13 +75,34 @@ public class Board {
                 return false;
             }
 
+            // comparing the board character with word character
             if (characterOnBoard != '-'){
                 if (word.charAt(i) != characterOnBoard){
                     return false;
                 }
             }
+
+            // checking for adjacent words
+            if (currentRound > 1){
+                if (direction == 'H'){
+                    if (row > 0 && board[row - 1][column + i] != '-') {
+                        hasAdjacent = true;
+                    }
+                    if (row < 14 && board[row + 1][column + i] != '-') {
+                        hasAdjacent = true;
+                    }
+                } else if (direction == 'V') {
+                    if (column > 0 && board[row + i][column - 1] != '-') {
+                        hasAdjacent = true;
+                    }
+                    if (column < 14 && board[row + i][column + 1] != '-') {
+                        hasAdjacent = true;
+                    }
+                }
+            }
+
         }
-        return true;
+        return currentRound <= 1 || hasAdjacent;
     }
 
 
