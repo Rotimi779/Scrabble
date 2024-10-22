@@ -26,6 +26,8 @@ At the moment to check if a placement is valid the program:
 
 The third check is supposed to allow interseciton of words however a player will not allow the player to play that word because they do not have the letter that they want to overlap
 
+Also there is an issue when the player that starts the game passes the turn in round 1, this is because the logic in the code mandates that after the first round subsequent plays must intersect with words on the board
+
 ## Future implementation
 ### Adding of points when 2 words are created
 When placing a word that creates 2 new words, the points from both words should be added to the player score
