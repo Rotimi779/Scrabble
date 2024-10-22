@@ -71,7 +71,7 @@ public class TileBag {
     // Display all tiles currently in the bag (for debugging)
     public void showBag() {
         for (Tiles tile : bag) {
-            System.out.println(tile);
+            System.out.println(tile.getLetter() + ": " + tile.getScore());
         }
     }
 }

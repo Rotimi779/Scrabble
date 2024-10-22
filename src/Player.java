@@ -61,6 +61,10 @@ public class Player {
         }
     }
 
+    public int getNumberOfTiles() {
+        return tiles.size();
+    }
+
     public int getPlayerScore(){
         return this.score;
     }
