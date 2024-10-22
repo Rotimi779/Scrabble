@@ -29,6 +29,7 @@ The third check is supposed to allow interseciton of words however a player will
 ## Future implementation
 ### Adding of points when 2 words are created
 When placing a word that creates 2 new words, the points from both words should be added to the player score
+### Allowing for more than 2 players
 ### Allowing players to quit the game
 ### GUI based version of the game
 ### Multiple level undo/redo
