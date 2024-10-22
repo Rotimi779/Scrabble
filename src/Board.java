@@ -3,7 +3,7 @@ public class Board {
     char[][] board;
 
 
-    
+
     //constructor
     public Board(){
         board = new char[15][15];
