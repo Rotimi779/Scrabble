@@ -38,10 +38,8 @@ public class Game {
     public void play(){
         boolean finished = false;
         while (!finished){
-            for (Player player : players){
-                player.playTurn();
-                switchTurn();
-            }
+            currentPlayer.playTurn();
+            switchTurn();
         }
         Player.close();
     }
