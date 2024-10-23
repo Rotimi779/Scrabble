@@ -16,6 +16,10 @@ The game keeps track of both players' score, which is calculated by adding the p
 - **Second turn:** From the second turn, player 2 is initialized with 7 tiles and has to create a word that connects to the word placed on the board by player 1. If the connection create 2 new words, the player get points from both words
 
 - **End the game:** The game ends when no more tiles in the tile bag and one player uses up the remaining tiles they are holding
+## RoadMap
+- **Deliverable 2:** implement GUI, complete implementation of MVC by adding view and controller and unit testing.
+- **Deliverable 3:** addition of blank tiles, premium squares and the ability to use any number of AI players.
+- **Deliverable 4:** multiple level undo/redo, save/load features and customization of board with alternate premium squares
 
 ## Issues
 ### Intersecting tiles implementation 
