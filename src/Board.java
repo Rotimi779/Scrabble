@@ -38,12 +38,18 @@ public class Board extends JFrame {
         if (word != null && !word.isEmpty()) {
             String direction = JOptionPane.showInputDialog("Enter direction: H (Horizontal) or V (Vertical)?");
             if (direction != null && (direction.equalsIgnoreCase("H") || direction.equalsIgnoreCase("V"))) {
-                game.getCurrentPlayer().placeWord(word);
+                char dirChar = direction.equalsIgnoreCase("H") ? 'H' : 'V';
+                if (game.getCurrentPlayer().place(word, dirChar, row, col)) {
+                    updateBoardDisplay();
+                } else {
+                    JOptionPane.showMessageDialog(this, "Invalid placement.");
+                }
             } else {
                 JOptionPane.showMessageDialog(this, "Invalid direction.");
             }
         }
     }
+
 
     public void updateBoard(int row, int col, char letter) {
         buttons[row][col].setText(String.valueOf(letter));
@@ -64,6 +70,14 @@ public class Board extends JFrame {
                 System.out.printf(board[i][j] + " ");
             }
             System.out.println();
+        }
+    }
+
+    private void updateBoardDisplay() {
+        for (int i = 0; i < buttons.length; i++) {
+            for (int j = 0; j < buttons[i].length; j++) {
+                buttons[i][j].setText(String.valueOf(Game.board.getBoard()[i][j]));
+            }
         }
     }
 

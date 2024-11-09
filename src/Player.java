@@ -117,6 +117,7 @@ public class Player {
                 }
             }
         }
+        //updatePlayerScore(word);
         return true;
     }
 
