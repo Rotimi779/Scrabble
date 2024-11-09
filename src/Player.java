@@ -13,11 +13,11 @@ public class Player {
 
     }
 
-    public void addTile(TileBag tileBag){
+    public void addTile(TileBag tileBag) {
         tiles.add(tileBag.drawTile());
     }
 
-    public int getScore(char letter){
+    public int getScore(char letter) {
         for (Tiles tile : tiles) {
             if (tile.getLetter() == letter) {
                 return tile.getScore();
@@ -26,7 +26,7 @@ public class Player {
         return 0;
     }
 
-    public void removeTile(char letter, int score){
+    public void removeTile(char letter, int score) {
         Iterator<Tiles> iterator = tiles.iterator();
         while (iterator.hasNext()) {
             Tiles tile = iterator.next();
@@ -65,27 +65,26 @@ public class Player {
         System.out.println("New Score: " + score);
     }
 
-    public void playTurn(){
+    public void playTurn() {
         System.out.println("Round " + Game.round);
-        System.out.println("Player " + Game.turn  +"'s turn");
+        System.out.println("Player " + Game.turn + "'s turn");
         this.displayTiles();
         System.out.print("Type a word or enter P to pass turn: ");
         String userInput = input.nextLine().trim().toLowerCase();
-        while((!Game.wordDictionary.containsWord(userInput)) ||  (!this.canFormWordFromTiles(userInput))){
-            if (userInput.equals("p")){
+        while ((!Game.wordDictionary.containsWord(userInput)) || (!this.canFormWordFromTiles(userInput))) {
+            if (userInput.equals("p")) {
                 break;
-            }else if(!this.canFormWordFromTiles(userInput)){
+            } else if (!this.canFormWordFromTiles(userInput)) {
                 System.out.println("The word cannot be formed from the available tiles");
                 System.out.println("Type a new word or enter P to pass turn: ");
                 userInput = input.nextLine().trim().toLowerCase();
-            }
-            else if(!Game.wordDictionary.containsWord(userInput)){
+            } else if (!Game.wordDictionary.containsWord(userInput)) {
                 System.out.println("The word is not in the dictionary");
                 System.out.println("Type a new word or enter P to pass turn: ");
                 userInput = input.nextLine().trim().toLowerCase();
             }
         }
-        if (!userInput.equals("p")){
+        if (!userInput.equals("p")) {
             placeWord(userInput);
         }
 
@@ -93,25 +92,25 @@ public class Player {
         this.displayTiles();
         Game.board.display();
 
-        if (!userInput.equals("p")){
+        if (!userInput.equals("p")) {
             pickTile();
         }
     }
 
     //methods
-    public boolean place(String word, char direction, int row, int column){
-        for (int i=0; i< word.length(); i++){
-            if (direction == 'H'){
-                if (Game.isValidPlacement(word, direction, row, column)){
+    public boolean place(String word, char direction, int row, int column) {
+        for (int i = 0; i < word.length(); i++) {
+            if (direction == 'H') {
+                if (Game.isValidPlacement(word, direction, row, column)) {
                     Game.board.getBoard()[row][column + i] = word.charAt(i);
-                }else {
+                } else {
                     System.out.println("Invalid placement");
                     return false;
                 }
             } else if (direction == 'V') {
-                if (Game.isValidPlacement(word, direction, row, column)){
+                if (Game.isValidPlacement(word, direction, row, column)) {
                     Game.board.getBoard()[row + i][column] = word.charAt(i);
-                }else{
+                } else {
                     System.out.println("Invalid placement");
                     playTurn();
                     return false;
@@ -123,7 +122,7 @@ public class Player {
 
     public void placeWord(String word) {
         boolean placed = false;
-        while(!placed){
+        while (!placed) {
             System.out.println("Where do you want to place the word? ");
             System.out.println("Row: ");
             int row = input.nextInt();
@@ -134,11 +133,11 @@ public class Player {
             System.out.println("H (Horizontal) or V (Vertical)? ");
             String direction = input.nextLine().trim().toLowerCase();
 
-            if (direction.equals("horizontal") || direction.equals("h")){
-                placed = place(word,'H',row,column);
-            }else if(direction.equals("vertical") || direction.equals("v")){
-                placed = place(word,'V',row,column);
-            }else{
+            if (direction.equals("horizontal") || direction.equals("h")) {
+                placed = place(word, 'H', row, column);
+            } else if (direction.equals("vertical") || direction.equals("v")) {
+                placed = place(word, 'V', row, column);
+            } else {
                 System.out.println("Invalid direction");
             }
         }
@@ -146,8 +145,8 @@ public class Player {
 
     public void pickTile() {
         //For refilling players tiles
-        while(this.getNumberOfTiles() < 7){
-            if (Game.tilebag.getBag().isEmpty()){
+        while (this.getNumberOfTiles() < 7) {
+            if (Game.tilebag.getBag().isEmpty()) {
                 System.out.println("The tile bag is empty");
                 break;
             }
@@ -163,18 +162,17 @@ public class Player {
         return tiles;
     }
 
-    public int getPlayerScore(){
+    public int getPlayerScore() {
         return this.score;
     }
 
-    public  boolean canFormWordFromTiles(String word) {
+    public boolean canFormWordFromTiles(String word) {
         // Step 1: Count the available tiles
         Map<Character, Integer> tileCount = new HashMap<>();
         for (Tiles tile : tiles) {
             char character = Character.toLowerCase(tile.getLetter());
             tileCount.put(character, tileCount.getOrDefault(character, 0) + 1);
         }
-
 
 
         // Step 2: Check each letter in the word

@@ -123,4 +123,8 @@ public class Game {
         }
         return currentRound <= 1 || hasAdjacent;
     }
+
+    public Player getCurrentPlayer() {
+        return currentPlayer;
+    }
 }
