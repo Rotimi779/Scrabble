@@ -16,7 +16,13 @@ public class Board extends JFrame {
         setLayout(new GridLayout(15, 15));
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
-        initializeGrid();
+        board = new char[15][15];
+        for (int i = 0; i< 15;i++){
+            for (int j = 0; j < 15; j++){
+                board[i][j] = '-';
+            }
+
+        }        initializeGrid();
         setVisible(true);
     }
 
@@ -28,6 +34,7 @@ public class Board extends JFrame {
                 buttons[i][j] = new JButton();
                 buttons[i][j].setPreferredSize(new Dimension(40, 40));
                 buttons[i][j].addActionListener(e -> handleButtonClick (row,col));
+                buttons[i][j].setText("-");
                 add(buttons[i][j]);
             }
         }
@@ -38,12 +45,22 @@ public class Board extends JFrame {
         if (word != null && !word.isEmpty()) {
             String direction = JOptionPane.showInputDialog("Enter direction: H (Horizontal) or V (Vertical)?");
             if (direction != null && (direction.equalsIgnoreCase("H") || direction.equalsIgnoreCase("V"))) {
-                game.getCurrentPlayer().placeWord(word);
+                char dirChar = direction.equalsIgnoreCase("H") ? 'H' : 'V';
+                if (game.getCurrentPlayer().place(word, dirChar, row, col)) {
+
+                    //New stuff
+                    //game.getCurrentPlayer().playTurn(word);
+
+                    updateBoardDisplay();
+                } else {
+                    JOptionPane.showMessageDialog(this, "Invalid placement.");
+                }
             } else {
                 JOptionPane.showMessageDialog(this, "Invalid direction.");
             }
         }
     }
+
 
     public void updateBoard(int row, int col, char letter) {
         buttons[row][col].setText(String.valueOf(letter));
@@ -64,6 +81,14 @@ public class Board extends JFrame {
                 System.out.printf(board[i][j] + " ");
             }
             System.out.println();
+        }
+    }
+
+    private void updateBoardDisplay() {
+        for (int i = 0; i < buttons.length; i++) {
+            for (int j = 0; j < buttons[i].length; j++) {
+                buttons[i][j].setText(String.valueOf(Game.board.getBoard()[i][j]));
+            }
         }
     }
 
