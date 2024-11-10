@@ -5,6 +5,7 @@ import java.awt.*;
 public class Board extends JFrame {
     //attributes
     private Game game;
+    private ScrabbleController controller;
     private JButton [][] buttons;
     private char[][] board;
     private JPanel grid;
@@ -12,8 +13,10 @@ public class Board extends JFrame {
     //constructor
     public Board(Game game){
         this.game = game;
+        controller = new ScrabbleController(game,this);
         this.buttons = new JButton[15][15];
         setTitle("Scrabble");
+        setSize(400,400);
         setLayout(new BorderLayout());
         grid = new JPanel(new GridLayout(15,15));
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -25,7 +28,7 @@ public class Board extends JFrame {
             }
 
         }
-        initializeGrid();
+        controller.initializeGrid(grid,buttons);
         add(grid, BorderLayout.CENTER);
 
         JPanel panel = new JPanel(new FlowLayout());
@@ -35,42 +38,6 @@ public class Board extends JFrame {
 
         setVisible(true);
     }
-
-    private void initializeGrid() {
-        for (int i = 0; i < 15; i++) {
-            for (int j = 0; j < 15; j++) {
-                final int row = i;
-                final int col = j;
-                buttons[i][j] = new JButton();
-                buttons[i][j].setPreferredSize(new Dimension(40, 40));
-                buttons[i][j].addActionListener(e -> handleButtonClick (row,col));
-                buttons[i][j].setText("-");
-                grid.add(buttons[i][j]);
-            }
-        }
-    }
-
-    private void handleButtonClick(int row, int col) {
-        String word = JOptionPane.showInputDialog("Enter a word:");
-        if (word != null && !word.isEmpty()) {
-            String direction = JOptionPane.showInputDialog("Enter direction: H (Horizontal) or V (Vertical)?");
-            if (direction != null && (direction.equalsIgnoreCase("H") || direction.equalsIgnoreCase("V"))) {
-                char dirChar = direction.equalsIgnoreCase("H") ? 'H' : 'V';
-                if (game.getCurrentPlayer().place(word, dirChar, row, col)) {
-
-                    //New stuff
-                    //game.getCurrentPlayer().playTurn(word);
-
-                    updateBoardDisplay();
-                } else {
-                    JOptionPane.showMessageDialog(this, "Invalid placement.");
-                }
-            } else {
-                JOptionPane.showMessageDialog(this, "Invalid direction.");
-            }
-        }
-    }
-
 
     public void updateBoard(int row, int col, char letter) {
         buttons[row][col].setText(String.valueOf(letter));
@@ -94,7 +61,7 @@ public class Board extends JFrame {
         }
     }
 
-    private void updateBoardDisplay() {
+    public void updateBoardDisplay() {
         for (int i = 0; i < buttons.length; i++) {
             for (int j = 0; j < buttons[i].length; j++) {
                 buttons[i][j].setText(String.valueOf(Game.board.getBoard()[i][j]));
