@@ -7,13 +7,15 @@ public class Board extends JFrame {
     private Game game;
     private JButton [][] buttons;
     private char[][] board;
+    private JPanel grid;
 
     //constructor
     public Board(Game game){
         this.game = game;
         this.buttons = new JButton[15][15];
         setTitle("Scrabble");
-        setLayout(new GridLayout(15, 15));
+        setLayout(new BorderLayout());
+        grid = new JPanel(new GridLayout(15,15));
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
         board = new char[15][15];
@@ -22,7 +24,15 @@ public class Board extends JFrame {
                 board[i][j] = '-';
             }
 
-        }        initializeGrid();
+        }
+        initializeGrid();
+        add(grid, BorderLayout.CENTER);
+
+        JPanel panel = new JPanel(new FlowLayout());
+        JTextField field = new JTextField(5);
+        panel.add(field);
+        add(panel, BorderLayout.SOUTH);
+
         setVisible(true);
     }
 
@@ -35,7 +45,7 @@ public class Board extends JFrame {
                 buttons[i][j].setPreferredSize(new Dimension(40, 40));
                 buttons[i][j].addActionListener(e -> handleButtonClick (row,col));
                 buttons[i][j].setText("-");
-                add(buttons[i][j]);
+                grid.add(buttons[i][j]);
             }
         }
     }
