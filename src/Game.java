@@ -1,4 +1,5 @@
 import java.util.ArrayList;
+import java.util.Iterator;
 
 public class Game {
     public static TileBag tilebag;
@@ -6,8 +7,9 @@ public class Game {
     public static Board board;
     public static int turn;
     public ArrayList<Player> players;
-    private Player currentPlayer;
+    private static Player currentPlayer;
     public static int round = 1;
+    public static int firstOrSecond = 1;
 
     public Game(Board board) {
         // initializations
@@ -43,9 +45,11 @@ public class Game {
         if (turn == 1){
             turn = 2;
             currentPlayer = players.get(1);
+            firstOrSecond = 2;
         } else if (turn == 2) {
             turn = 1;
             currentPlayer = players.get(0);
+            firstOrSecond = 1;
         }
     }
 
@@ -157,14 +161,21 @@ public class Game {
     public static int calculateScore(String word, int row, int column, char direction) {
 
         int score = 0;
+        System.out.println(word);
+        for (char c: word.toCharArray()){
+            Iterator<Tiles> iter = currentPlayer.getTiles().iterator();
+            while(iter.hasNext()){
+                Tiles tile = iter.next();
+                //System.out.println("The letter is ");
+                if(tile.getLetter() == Character.toUpperCase(c)){
 
-        for (int i = 0; i < word.length(); i++) {
-            char letter = word.charAt(i);
+                    System.out.println(tile.getScore());
 
-            int tileScore = Game.tilebag.getScore(letter);
-            score+= tileScore;
+                    score += tile.getScore();
+                    break;
+                }
+            }
         }
-
         return score;
     }
 

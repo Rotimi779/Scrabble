@@ -70,6 +70,18 @@ public class Player {
         this.score += score;
         System.out.println("Total score for word " + word + ": " + score);
 
+        //Remove the tiles if they have been used
+        for (char s: word.toCharArray()){
+            Iterator<Tiles> iter = tiles.iterator();
+            while(iter.hasNext()){
+                Tiles tile = iter.next();
+                if(tile.getLetter() == Character.toUpperCase(s)){
+                    iter.remove();
+                    break;
+                }
+            }
+
+        }
     }
 
     public void playTurn(String word, char direction, int row, int col) {
@@ -78,6 +90,12 @@ public class Player {
                 updatePlayerScore(word, direction, row, col);
                 pickTile();
             }
+        }
+        else if (Game.wordDictionary.containsWord(word)){
+            System.out.println("The word is not in the dictionary");
+        }
+        else if(canFormWordFromTiles(word, board, row, col, direction)){
+            System.out.println("Can't form words from tiles");
         }
     }
 

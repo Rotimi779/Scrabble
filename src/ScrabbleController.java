@@ -28,13 +28,13 @@ public class ScrabbleController {
                 board.updateBoardDisplay();
 
                 // Update player score
-                game.getCurrentPlayer().updatePlayerScore(playEvent.getWord(), dirChar, row, col);
+                //game.getCurrentPlayer().updatePlayerScore(playEvent.getWord(), dirChar, row, col);
 
 
                 // Update score display on GUI
                 int playerScore = game.getCurrentPlayer().getPlayerScore();
                 board.updateScoreLabel(playerScore);
-                System.out.println("Player's current score: " + playerScore);
+                //System.out.println("Player's current score: " + playerScore);
 
             } else {
                 board.displayInvalidPlacement();
