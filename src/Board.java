@@ -72,10 +72,9 @@ public class Board extends JFrame {
             for (int j = 0; j < 15; j++) {
                 int row = i;
                 int col = j;
-                buttons[i][j] = new JButton();
+                buttons[i][j] = new JButton("-");
                 buttons[i][j].setPreferredSize(new Dimension(40, 40));
                 buttons[i][j].addActionListener(e -> controller.handleButtonClick(row, col));
-                buttons[i][j].setText("-");
                 grid.add(buttons[i][j]);
             }
         }

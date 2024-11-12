@@ -35,7 +35,7 @@ public class Game {
     }
 
     public void play(String word, char direction, int row, int col) {
-        getCurrentPlayer().playTurn(word, direction, row, col);
+        currentPlayer.playTurn(word, direction, row, col);
         switchTurn();
     }
 
