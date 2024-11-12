@@ -9,6 +9,9 @@ public class Board extends JFrame {
     private char[][] board;
     private JPanel grid;
     private JLabel tiles;
+    private JLabel roundLabel;
+    private JPanel topPanel;
+    private JPanel bottomPanel;
 
     //constructor
     public Board(){
@@ -18,6 +21,11 @@ public class Board extends JFrame {
         setLayout(new BorderLayout());
         grid = new JPanel(new GridLayout(15,15));
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+
+        topPanel = new JPanel(new FlowLayout());
+        roundLabel = new JLabel();
+        topPanel.add(roundLabel);
+        add(topPanel, BorderLayout.NORTH);
 
         board = new char[15][15];
         for (int i = 0; i< 15;i++){
@@ -29,12 +37,16 @@ public class Board extends JFrame {
         initializeGrid(grid,buttons);
         add(grid, BorderLayout.CENTER);
 
-        JPanel panel = new JPanel(new FlowLayout());
+        bottomPanel = new JPanel(new FlowLayout());
         tiles = new JLabel();
-        panel.add(tiles);
-        add(panel, BorderLayout.SOUTH);
+        bottomPanel.add(tiles);
+        add(bottomPanel, BorderLayout.SOUTH);
 
         setVisible(true);
+    }
+
+    public void displayRound(int round){
+        roundLabel.setText("Round " + Integer.toString(round));
     }
 
     public void displayCurrentPlayerTiles(String playerTiles){
@@ -97,6 +109,7 @@ public class Board extends JFrame {
     public void updateBoardDisplay() {
         for (int i = 0; i < buttons.length; i++) {
             for (int j = 0; j < buttons[i].length; j++) {
+                System.out.print(board[i][j] + " ");
                 buttons[i][j].setText(String.valueOf(this.board[i][j]));
             }
         }

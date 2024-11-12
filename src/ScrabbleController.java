@@ -12,6 +12,7 @@ public class ScrabbleController{
         this.game = game;
         this.board = board;
         board.setController(this);
+        board.displayRound(game.getRound());
         board.displayCurrentPlayerTiles(game.getCurrentPlayer().displayTiles());
     }
 
@@ -20,7 +21,6 @@ public class ScrabbleController{
         if (playEvent.getWord() != null && !playEvent.getWord().isEmpty() && game.getCurrentPlayer().canFormWordFromTiles(playEvent.getWord())) {
             if (playEvent.getDirection() != null && (playEvent.getDirection().equalsIgnoreCase("H") || playEvent.getDirection().equalsIgnoreCase("V"))) {
                 char dirChar = playEvent.getDirection().equalsIgnoreCase("H") ? 'H' : 'V';
-//                if (game.getCurrentPlayer().place(playEvent.getWord(), dirChar, row, col)) {
                 if (Game.isValidPlacement(board, playEvent.getWord(), dirChar, row, col)){
                     game.play(playEvent.getWord(), dirChar, row, col);
                     board.updateBoardDisplay();
@@ -33,5 +33,8 @@ public class ScrabbleController{
         }else{
             board.displayInvalidWord();
         }
+
+        board.displayRound(game.getRound());
+        board.displayCurrentPlayerTiles(game.getCurrentPlayer().displayTiles());
     }
 }

@@ -39,9 +39,10 @@ public class Player {
     }
 
     public String displayTiles() {
-        StringBuilder str = new StringBuilder("Player tiles: \n");
+        StringBuilder str = new StringBuilder("Player");
+        str.append(Game.turn).append("'s tiles:");
         for (Tiles tile : tiles) {
-            str.append("\t").append("Tile: ").append(tile.getLetter()).append(" Score: ").append(tile.getScore()).append("\n");
+            str.append("\t").append("Tile: ").append(tile.getLetter()).append(" Score: ").append(tile.getScore());
         }
         return str.toString();
     }
