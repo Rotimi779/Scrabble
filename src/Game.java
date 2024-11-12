@@ -1,11 +1,9 @@
 import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.Scanner;
 
 public class Game {
     public static TileBag tilebag;
     public static WordDictionary wordDictionary;
-    public Board board;
+    public static Board board;
     public static int turn;
     public ArrayList<Player> players;
     private Player currentPlayer;
@@ -19,6 +17,7 @@ public class Game {
         Player player1 = new Player(board);
         Player player2 = new Player(board);
         currentPlayer = player1;
+        this.board = board;
 
         // Give the players their tiles
         for (int i = 0; i < 7; i ++){
@@ -54,62 +53,154 @@ public class Game {
         return round;
     }
 
-    public static boolean isValidPlacement(Board board, String word, char direction, int row, int column){
-
-        // checking out of bounds
-        if( direction == 'H' && (column + word.length()) > 15){
+    public static boolean isValidPlacement(Board board, String word, char direction, int row, int column) {
+        // Check for out-of-bounds conditions
+        if (direction == 'H' && (column + word.length()) > 15) {
             return false;
-        } else if ( direction == 'V' && (row + word.length()) > 15) {
+        } else if (direction == 'V' && (row + word.length()) > 15) {
             return false;
         }
 
         boolean hasAdjacent = false;
-        int currentRound = round;
 
-        for ( int i=0; i < word.length(); i++){
-
+        for (int i = 0; i < word.length(); i++) {
             char characterOnBoard;
 
-            // setting the board character
-            if (direction == 'H'){
+            // Set the character on the board depending on direction
+            if (direction == 'H') {
                 characterOnBoard = board.getBoard()[row][column + i];
             } else if (direction == 'V') {
                 characterOnBoard = board.getBoard()[row + i][column];
-            }else{
+            } else {
                 return false;
             }
 
-            // comparing the board character with word character
-            if (characterOnBoard != '-'){
-                if (word.charAt(i) != characterOnBoard){
-                    return false;
+            // Check if the tile on the board is either empty ('-') or matches the letter in the word
+            if (characterOnBoard != '-') {
+                if (characterOnBoard != word.charAt(i)) {
+                    return false; // The board letter doesn't match the word letter, so return false
                 }
             }
 
-            // checking for adjacent words
-            if (currentRound > 1){
-                if (direction == 'H'){
-                    if (row > 0 && board.getBoard()[row - 1][column + i] != '-') {
-                        hasAdjacent = true;
-                    }
-                    if (row < 14 && board.getBoard()[row + 1][column + i] != '-') {
-                        hasAdjacent = true;
-                    }
-                } else if (direction == 'V') {
-                    if (column > 0 && board.getBoard()[row + i][column - 1] != '-') {
-                        hasAdjacent = true;
-                    }
-                    if (column < 14 && board.getBoard()[row + i][column + 1] != '-') {
-                        hasAdjacent = true;
-                    }
+            // Check if the placement has adjacent words or tiles
+            if (hasAdjacent) {
+                return false;
+            }
+
+            // Check if the word forms any new perpendicular words
+            if (direction == 'H') {
+                if (row > 0 && board.getBoard()[row - 1][column + i] != '-') {
+                    hasAdjacent = true;
+                }
+                if (row < 14 && board.getBoard()[row + 1][column + i] != '-') {
+                    hasAdjacent = true;
+                }
+            } else if (direction == 'V') {
+                if (column > 0 && board.getBoard()[row + i][column - 1] != '-') {
+                    hasAdjacent = true;
+                }
+                if (column < 14 && board.getBoard()[row + i][column + 1] != '-') {
+                    hasAdjacent = true;
                 }
             }
 
+            // Check for perpendicular word validation
+            String perpendicularWord = newPerpendicularWord(row + i, column + i, direction);
+            if (perpendicularWord.length() > 1 && !isValidWord(perpendicularWord)) {
+                return false;
+            }
         }
-        return currentRound <= 1 || hasAdjacent;
+
+        return true; // Return true if all conditions are satisfied
     }
 
+
+    // checking for new word created, only for perpendicular will add parallel later
+    public static String newPerpendicularWord(int row, int column, char direction){
+        StringBuilder newWord = new StringBuilder();
+        int startRow = row, startCol = column;
+
+        if (direction == 'H') {
+            while (startRow > 0 && board.getBoard()[startRow - 1][column] != '-') {
+                startRow--;
+
+            }
+        }else {
+            while (startCol > 0 && board.getBoard()[row][startCol - 1] != '-') {
+                startCol--;
+            }
+        }
+
+        // forming the word
+        if (direction == 'H') {
+            while (startRow <= 14 && board.getBoard()[startRow][column] != '-') {
+                newWord.append(board.getBoard()[startRow][column]);
+                startRow++;
+            }
+        } else {
+            while (startCol <= 14 && board.getBoard()[row][startCol] != '-') {
+                newWord.append(board.getBoard()[row][startCol]);
+                startCol++;
+                startCol++;
+            }
+        }
+        return newWord.toString();
+    }
+
+    private static boolean isValidWord(String word){
+        return wordDictionary.containsWord(word);
+    }
     public Player getCurrentPlayer() {
         return currentPlayer;
+    }
+
+    public static int calculateScore(String word, int row, int column, char direction) {
+
+        int score = 0;
+
+        for (int i = 0; i < word.length(); i++) {
+            char letter = word.charAt(i);
+
+            int tileScore = Game.tilebag.getScore(letter);
+            score+= tileScore;
+        }
+
+        return score;
+    }
+
+    public static int calculatePerpendicularWordScore(String word, int row, int column, char direction) {
+
+        int perpendicularScore = 0;
+
+        for (int i = 0; i < word.length(); i++) {
+            char letter = word.charAt(i);
+
+            // Only calculate perpendicular words for newly placed tiles
+            if ((direction == 'H' && Game.board.getBoard()[row][column + i] == '-') ||
+                    (direction == 'V' && Game.board.getBoard()[row + i][column] == '-')) {
+
+                String perpendicularWord = newPerpendicularWord(row + (direction == 'H' ? 0 : i),
+                        column + (direction == 'H' ? i : 0),
+                        direction);
+
+                // Check if a new perpendicular word was formed
+                if (perpendicularWord.length() > 1 && wordDictionary.containsWord(perpendicularWord)) {
+                    for (char perpendicularLetter : perpendicularWord.toCharArray()) {
+                        perpendicularScore += getTileScore(perpendicularLetter);
+                    }
+                }
+            }
+        }
+
+        return perpendicularScore;
+    }
+
+    public static int getTileScore(char letter) {
+        for (Tiles tile : TileBag.getBag()) {
+            if (tile.getLetter() == letter) {
+                return tile.getScore();
+            }
+        }
+        return 0; // default if tile not found
     }
 }

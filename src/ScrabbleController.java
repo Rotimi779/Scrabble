@@ -4,7 +4,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 
-public class ScrabbleController{
+public class ScrabbleController {
     private Game game;
     private Board board;
 
@@ -18,20 +18,34 @@ public class ScrabbleController{
 
     public void handleButtonClick(int row, int col) {
         PlayEvent playEvent = board.displayInputFields();
-        if (playEvent.getWord() != null && !playEvent.getWord().isEmpty() && game.getCurrentPlayer().canFormWordFromTiles(playEvent.getWord())) {
-            if (playEvent.getDirection() != null && (playEvent.getDirection().equalsIgnoreCase("H") || playEvent.getDirection().equalsIgnoreCase("V"))) {
-                char dirChar = playEvent.getDirection().equalsIgnoreCase("H") ? 'H' : 'V';
-                if (Game.isValidPlacement(board, playEvent.getWord(), dirChar, row, col)){
-                    game.play(playEvent.getWord(), dirChar, row, col);
-                    board.updateBoardDisplay();
-                } else {
-                    board.displayInvalidPlacement();
-                }
+        String direction = playEvent.getDirection();
+
+        if (playEvent.getWord() != null && !playEvent.getWord().isEmpty() && direction != null && (direction.equalsIgnoreCase("H") || direction.equalsIgnoreCase("V"))) {
+            char dirChar = direction.equalsIgnoreCase("H") ? 'H' : 'V';
+
+            if (Game.isValidPlacement(board, playEvent.getWord(), dirChar, row, col)) {
+                game.play(playEvent.getWord(), dirChar, row, col);
+                board.updateBoardDisplay();
+
+                // Update player score
+                game.getCurrentPlayer().updatePlayerScore(playEvent.getWord(), dirChar, row, col);
+
+
+                // Update score display on GUI
+                int playerScore = game.getCurrentPlayer().getPlayerScore();
+                board.updateScoreLabel(playerScore);
+                System.out.println("Player's current score: " + playerScore);
+
             } else {
-                board.displayInvalidDirection();
+                board.displayInvalidPlacement();
             }
-        }else{
-            board.displayInvalidWord();
+        } else {
+            // Handle invalid word or direction
+            if (direction == null) {
+                board.displayInvalidDirection(); // You could also show a message indicating the direction is missing
+            } else {
+                board.displayInvalidWord();
+            }
         }
 
         board.displayRound(game.getRound());
