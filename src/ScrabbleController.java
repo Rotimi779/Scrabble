@@ -2,6 +2,7 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.MouseAdapter;
 
 public class ScrabbleController{
     private Game game;
@@ -10,41 +11,22 @@ public class ScrabbleController{
     public ScrabbleController(Game game, Board board) {
         this.game = game;
         this.board = board;
-
     }
 
-
-    public void initializeGrid(JPanel grid,JButton [][] buttons) {
-        for (int i = 0; i < 15; i++) {
-            for (int j = 0; j < 15; j++) {
-                final int row = i;
-                final int col = j;
-                buttons[i][j] = new JButton();
-                buttons[i][j].setPreferredSize(new Dimension(40, 40));
-                buttons[i][j].addActionListener(e -> handleButtonClick (row,col));
-                buttons[i][j].setText("-");
-                grid.add(buttons[i][j]);
-            }
-        }
-    }
-
-    private void handleButtonClick(int row, int col) {
-        String word = JOptionPane.showInputDialog("Enter a word:");
-        if (word != null && !word.isEmpty()) {
-            String direction = JOptionPane.showInputDialog("Enter direction: H (Horizontal) or V (Vertical)?");
-            if (direction != null && (direction.equalsIgnoreCase("H") || direction.equalsIgnoreCase("V"))) {
-                char dirChar = direction.equalsIgnoreCase("H") ? 'H' : 'V';
-                if (game.getCurrentPlayer().place(word, dirChar, row, col)) {
-
-                    //New stuff
-                    //game.getCurrentPlayer().playTurn(word);
-
+    public void handleButtonClick(int row, int col) {
+        PlayEvent playEvent = board.displayInputFields();
+        if (playEvent.getWord() != null && !playEvent.getWord().isEmpty()) {
+            if (playEvent.getDirection() != null && (playEvent.getDirection().equalsIgnoreCase("H") || playEvent.getDirection().equalsIgnoreCase("V"))) {
+                char dirChar = playEvent.getDirection().equalsIgnoreCase("H") ? 'H' : 'V';
+//                if (game.getCurrentPlayer().place(playEvent.getWord(), dirChar, row, col)) {
+                if (Game.isValidPlacement(board, playEvent.getWord(), dirChar, row, col)){
+                    game.play(playEvent.getWord(), dirChar, row, col);
                     board.updateBoardDisplay();
                 } else {
-                    JOptionPane.showMessageDialog(board, "Invalid placement.");
+                    board.displayInvalidPlacement();
                 }
             } else {
-                JOptionPane.showMessageDialog(board, "Invalid direction.");
+                board.displayInvalidDirection();
             }
         }
     }

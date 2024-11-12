@@ -4,19 +4,16 @@ import java.awt.*;
 
 public class Board extends JFrame {
     //attributes
-    private Game game;
     private ScrabbleController controller;
-    private JButton [][] buttons;
+    private JButton[][] buttons;
     private char[][] board;
     private JPanel grid;
 
     //constructor
-    public Board(Game game){
-        this.game = game;
-        controller = new ScrabbleController(game,this);
+    public Board(){
         this.buttons = new JButton[15][15];
         setTitle("Scrabble");
-        setSize(400,400);
+        setSize(800,600);
         setLayout(new BorderLayout());
         grid = new JPanel(new GridLayout(15,15));
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -28,15 +25,43 @@ public class Board extends JFrame {
             }
 
         }
-        controller.initializeGrid(grid,buttons);
+        initializeGrid(grid,buttons);
         add(grid, BorderLayout.CENTER);
 
         JPanel panel = new JPanel(new FlowLayout());
-        JTextField field = new JTextField(5);
-        panel.add(field);
+        JLabel label = new JLabel("LEN");
+        panel.add(label);
         add(panel, BorderLayout.SOUTH);
 
         setVisible(true);
+    }
+
+    public JButton[][] getButtons(){
+        return this.buttons;
+    }
+
+    public void setController(ScrabbleController controller){
+        this.controller = controller;
+    }
+
+    public PlayEvent displayInputFields(){
+        String word = JOptionPane.showInputDialog("Enter a word:");
+        String direction = JOptionPane.showInputDialog("Enter direction: H (Horizontal) or V (Vertical)?");
+        return new PlayEvent(this, word, direction);
+    }
+
+    public void initializeGrid(JPanel grid,JButton [][] buttons) {
+        for (int i = 0; i < 15; i++) {
+            for (int j = 0; j < 15; j++) {
+                int row = i;
+                int col = j;
+                buttons[i][j] = new JButton();
+                buttons[i][j].setPreferredSize(new Dimension(40, 40));
+                buttons[i][j].addActionListener(e -> controller.handleButtonClick(row, col));
+                buttons[i][j].setText("-");
+                grid.add(buttons[i][j]);
+            }
+        }
     }
 
     public void updateBoard(int row, int col, char letter) {
@@ -61,10 +86,18 @@ public class Board extends JFrame {
         }
     }
 
+    public void displayInvalidPlacement(){
+        JOptionPane.showMessageDialog(this, "Invalid placement.");
+    }
+
+    public void displayInvalidDirection(){
+        JOptionPane.showMessageDialog(this, "Invalid direction.");
+    }
+
     public void updateBoardDisplay() {
         for (int i = 0; i < buttons.length; i++) {
             for (int j = 0; j < buttons[i].length; j++) {
-                buttons[i][j].setText(String.valueOf(Game.board.getBoard()[i][j]));
+                buttons[i][j].setText(String.valueOf(this.board[i][j]));
             }
         }
     }

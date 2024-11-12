@@ -5,19 +5,19 @@ import java.util.Scanner;
 public class Game {
     public static TileBag tilebag;
     public static WordDictionary wordDictionary;
-    public static Board board;
+    public Board board;
     public static int turn;
     public ArrayList<Player> players;
     private Player currentPlayer;
     public static int round = 1;
 
-    public Game() {
+    public Game(Board board) {
         // initializations
         tilebag = new TileBag();
         wordDictionary = new WordDictionary("https://www.mit.edu/~ecprice/wordlist.10000");
         this.players = new ArrayList<>();
-        Player player1 = new Player();
-        Player player2 = new Player();
+        Player player1 = new Player(board);
+        Player player2 = new Player(board);
         currentPlayer = player1;
 
         // Give the players their tiles
@@ -30,28 +30,13 @@ public class Game {
         players.add(player2);
 
         // Initialize the board and start the game
-        board = new Board(this);
         turn = 1;
         System.out.println("Welcome to the Game of Scrabble");
     }
 
-    public void play(){
-        boolean finished = false;
-
-        while (!finished){ //
-            currentPlayer.playTurn();
-            switchTurn();
-            if (tilebag.getBag().isEmpty()){
-                for (Player player : players){
-                    if (player.getTiles().isEmpty()){
-                        finished = true;
-                        break;
-                    }
-                }
-
-            }
-        }
-        Player.close();
+    public void play(String word, char direction, int row, int col) {
+        getCurrentPlayer().playTurn(word, direction, row, col);
+        switchTurn();
     }
 
     public void switchTurn(){
@@ -66,10 +51,10 @@ public class Game {
     }
 
     public int getRound(){
-        return this.round;
+        return round;
     }
 
-    public static boolean isValidPlacement(String word, char direction, int row, int column){
+    public static boolean isValidPlacement(Board board, String word, char direction, int row, int column){
 
         // checking out of bounds
         if( direction == 'H' && (column + word.length()) > 15){

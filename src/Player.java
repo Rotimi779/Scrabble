@@ -5,12 +5,12 @@ public class Player {
     private int score;
     private List<Tiles> tiles;
     private static Scanner input;
+    private Board board;
 
-    public Player() {
+    public Player(Board board) {
         tiles = new ArrayList<>();
         this.score = 0;
-        input = new Scanner(System.in);
-
+        this.board = board;
     }
 
     public void addTile(TileBag tileBag) {
@@ -38,10 +38,6 @@ public class Player {
         System.out.println("No matching tile found for " + letter + "(" + score + ")");
     }
 
-    public static void close() {
-        input.close();
-    }
-
     public void displayTiles() {
         System.out.println("Player's Tiles:");
         for (Tiles tile : tiles) {
@@ -65,35 +61,12 @@ public class Player {
         System.out.println("New Score: " + score);
     }
 
-    public void playTurn() {
-        System.out.println("Round " + Game.round);
-        System.out.println("Player " + Game.turn + "'s turn");
-        this.displayTiles();
-        System.out.print("Type a word or enter P to pass turn: ");
-        String userInput = input.nextLine().trim().toLowerCase();
-        while ((!Game.wordDictionary.containsWord(userInput)) || (!this.canFormWordFromTiles(userInput))) {
-            if (userInput.equals("p")) {
-                break;
-            } else if (!this.canFormWordFromTiles(userInput)) {
-                System.out.println("The word cannot be formed from the available tiles");
-                System.out.println("Type a new word or enter P to pass turn: ");
-                userInput = input.nextLine().trim().toLowerCase();
-            } else if (!Game.wordDictionary.containsWord(userInput)) {
-                System.out.println("The word is not in the dictionary");
-                System.out.println("Type a new word or enter P to pass turn: ");
-                userInput = input.nextLine().trim().toLowerCase();
+    public void playTurn(String word, char direction, int row, int col) {
+        if ((!Game.wordDictionary.containsWord(word)) || (!canFormWordFromTiles(word))) {
+            if (place(word, direction, row, col)){
+                updatePlayerScore(word);
+                pickTile();
             }
-        }
-        if (!userInput.equals("p")) {
-            placeWord(userInput);
-        }
-
-        this.updatePlayerScore(userInput);
-        this.displayTiles();
-        Game.board.display();
-
-        if (!userInput.equals("p")) {
-            pickTile();
         }
     }
 
@@ -101,47 +74,23 @@ public class Player {
     public boolean place(String word, char direction, int row, int column) {
         for (int i = 0; i < word.length(); i++) {
             if (direction == 'H') {
-                if (Game.isValidPlacement(word, direction, row, column)) {
-                    Game.board.getBoard()[row][column + i] = word.charAt(i);
+                if (Game.isValidPlacement(board, word, direction, row, column)) {
+                    board.getBoard()[row][column + i] = word.charAt(i);
                 } else {
                     System.out.println("Invalid placement");
                     return false;
                 }
             } else if (direction == 'V') {
-                if (Game.isValidPlacement(word, direction, row, column)) {
-                    Game.board.getBoard()[row + i][column] = word.charAt(i);
+                if (Game.isValidPlacement(board, word, direction, row, column)) {
+                    board.getBoard()[row + i][column] = word.charAt(i);
                 } else {
                     System.out.println("Invalid placement");
-                    playTurn();
                     return false;
                 }
             }
         }
         //updatePlayerScore(word);
         return true;
-    }
-
-    public void placeWord(String word) {
-        boolean placed = false;
-        while (!placed) {
-            System.out.println("Where do you want to place the word? ");
-            System.out.println("Row: ");
-            int row = input.nextInt();
-            input.nextLine();
-            System.out.println("Column: ");
-            int column = input.nextInt();
-            input.nextLine();
-            System.out.println("H (Horizontal) or V (Vertical)? ");
-            String direction = input.nextLine().trim().toLowerCase();
-
-            if (direction.equals("horizontal") || direction.equals("h")) {
-                placed = place(word, 'H', row, column);
-            } else if (direction.equals("vertical") || direction.equals("v")) {
-                placed = place(word, 'V', row, column);
-            } else {
-                System.out.println("Invalid direction");
-            }
-        }
     }
 
     public void pickTile() {
