@@ -69,15 +69,12 @@ public class Player {
             if (place(word, direction, row, col)){
                 updatePlayerScore(word);
                 pickTile();
-            }else{
-                System.out.println("No matching tile found for " + word + "(" + score + ")");
             }
         }
     }
 
     //methods
     public boolean place(String word, char direction, int row, int column) {
-        System.out.println("I am here");
         for (int i = 0; i < word.length(); i++) {
             if (direction == 'H') {
                 if (Game.isValidPlacement(board, word, direction, row, column)) {
@@ -87,7 +84,6 @@ public class Player {
                     return false;
                 }
             } else if (direction == 'V') {
-                System.out.println("I am NOW VERTICAL");
                 if (Game.isValidPlacement(board, word, direction, row, column)) {
                     board.getBoard()[row + i][column] = word.charAt(i);
                 } else {

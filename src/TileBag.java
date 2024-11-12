@@ -1,12 +1,14 @@
 import java.util.*;
 
 public class TileBag {
-    private List<Tiles> bag;
+    private static List<Tiles> bag;
+    private static Map<Character, Integer> scoreMap;
     private Random random;
 
     // Constructor to initialize all tiles
     public TileBag() {
         bag = new ArrayList<>();
+        scoreMap = new HashMap<>();
         random = new Random();
         initializeBag();
     }
@@ -45,6 +47,11 @@ public class TileBag {
         for (int i = 0; i < count; i++) {
             bag.add(new Tiles(letter, score));
         }
+        scoreMap.put(letter, score);
+    }
+
+    public int getScore(char letter) {
+        return scoreMap.getOrDefault(letter, 0);  // Get score from map, defaulting to 0
     }
 
     // Draw a random tile from the bag
@@ -75,7 +82,8 @@ public class TileBag {
         }
     }
 
-    public List<Tiles> getBag() {
+    public static List<Tiles> getBag() {
         return bag;
     }
+
 }

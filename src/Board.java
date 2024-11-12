@@ -12,6 +12,8 @@ public class Board extends JFrame {
     private JLabel roundLabel;
     private JPanel topPanel;
     private JPanel bottomPanel;
+    private JLabel scoreLabel;
+
 
     //constructor
     public Board(){
@@ -26,6 +28,8 @@ public class Board extends JFrame {
         roundLabel = new JLabel();
         topPanel.add(roundLabel);
         add(topPanel, BorderLayout.NORTH);
+        scoreLabel = new JLabel("Score: ");
+        add(scoreLabel, BorderLayout.NORTH);
 
         board = new char[15][15];
         for (int i = 0; i< 15;i++){
@@ -80,15 +84,6 @@ public class Board extends JFrame {
         }
     }
 
-    public void updateBoard(int row, int col, char letter) {
-        buttons[row][col].setText(String.valueOf(letter));
-    }
-
-    public void updateButton(int row, int col, char letter){
-        board [row][col] = letter;
-        buttons[row][col].setText(String.valueOf(letter));
-    }
-
     public char[][] getBoard() {
         return board;
     }
@@ -108,10 +103,17 @@ public class Board extends JFrame {
     public void updateBoardDisplay() {
         for (int i = 0; i < buttons.length; i++) {
             for (int j = 0; j < buttons[i].length; j++) {
-                System.out.print(board[i][j] + " ");
                 buttons[i][j].setText(String.valueOf(this.board[i][j]));
             }
         }
     }
+
+    public void updateScoreLabel(int score) {
+        scoreLabel.setText("Score: " + score);
+        scoreLabel.revalidate();
+        scoreLabel.repaint();
+    }
+
+
 
 }
