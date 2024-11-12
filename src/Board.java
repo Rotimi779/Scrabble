@@ -8,6 +8,7 @@ public class Board extends JFrame {
     private JButton[][] buttons;
     private char[][] board;
     private JPanel grid;
+    private JLabel tiles;
 
     //constructor
     public Board(){
@@ -29,11 +30,15 @@ public class Board extends JFrame {
         add(grid, BorderLayout.CENTER);
 
         JPanel panel = new JPanel(new FlowLayout());
-        JLabel label = new JLabel("LEN");
-        panel.add(label);
+        tiles = new JLabel();
+        panel.add(tiles);
         add(panel, BorderLayout.SOUTH);
 
         setVisible(true);
+    }
+
+    public void displayCurrentPlayerTiles(String playerTiles){
+        tiles.setText(playerTiles);
     }
 
     public JButton[][] getButtons(){
@@ -77,17 +82,12 @@ public class Board extends JFrame {
         return board;
     }
 
-    public void display() {
-        for (int i = 0; i < 15; i++) {
-            for (int j = 0; j < 15; j++) {
-                System.out.printf(board[i][j] + " ");
-            }
-            System.out.println();
-        }
-    }
-
     public void displayInvalidPlacement(){
         JOptionPane.showMessageDialog(this, "Invalid placement.");
+    }
+
+    public void displayInvalidWord(){
+        JOptionPane.showMessageDialog(this, "Invalid word.");
     }
 
     public void displayInvalidDirection(){

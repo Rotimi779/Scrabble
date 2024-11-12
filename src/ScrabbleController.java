@@ -11,11 +11,13 @@ public class ScrabbleController{
     public ScrabbleController(Game game, Board board) {
         this.game = game;
         this.board = board;
+        board.setController(this);
+        board.displayCurrentPlayerTiles(game.getCurrentPlayer().displayTiles());
     }
 
     public void handleButtonClick(int row, int col) {
         PlayEvent playEvent = board.displayInputFields();
-        if (playEvent.getWord() != null && !playEvent.getWord().isEmpty()) {
+        if (playEvent.getWord() != null && !playEvent.getWord().isEmpty() && game.getCurrentPlayer().canFormWordFromTiles(playEvent.getWord())) {
             if (playEvent.getDirection() != null && (playEvent.getDirection().equalsIgnoreCase("H") || playEvent.getDirection().equalsIgnoreCase("V"))) {
                 char dirChar = playEvent.getDirection().equalsIgnoreCase("H") ? 'H' : 'V';
 //                if (game.getCurrentPlayer().place(playEvent.getWord(), dirChar, row, col)) {
@@ -28,6 +30,8 @@ public class ScrabbleController{
             } else {
                 board.displayInvalidDirection();
             }
+        }else{
+            board.displayInvalidWord();
         }
     }
 }

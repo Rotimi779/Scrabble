@@ -7,7 +7,6 @@ public class Main {
         Board board = new Board();
         Game game = new Game(board);
         ScrabbleController controller = new ScrabbleController(game,board);
-        board.setController(controller);
 
     }
 

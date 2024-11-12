@@ -38,11 +38,12 @@ public class Player {
         System.out.println("No matching tile found for " + letter + "(" + score + ")");
     }
 
-    public void displayTiles() {
-        System.out.println("Player's Tiles:");
+    public String displayTiles() {
+        StringBuilder str = new StringBuilder("Player tiles: \n");
         for (Tiles tile : tiles) {
-            System.out.println("Tile: " + tile.getLetter() + " Score: " + tile.getScore());
+            str.append("\t").append("Tile: ").append(tile.getLetter()).append(" Score: ").append(tile.getScore()).append("\n");
         }
+        return str.toString();
     }
 
     public void updatePlayerScore(String word) {
