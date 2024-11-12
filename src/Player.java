@@ -2,7 +2,7 @@ import java.util.*;
 
 
 public class Player {
-    private int score;
+    private int score =0;
     private List<Tiles> tiles;
     private static Scanner input;
     private Board board;
@@ -47,27 +47,47 @@ public class Player {
         return str.toString();
     }
 
-    public void updatePlayerScore(String word) {
-        Iterator<Tiles> iterator = tiles.iterator();
-        for (char i : word.toCharArray()) {
-            score += getScore(i);
-            while (iterator.hasNext()) {
-                Tiles tile = iterator.next();
-                if (Character.toLowerCase(tile.getLetter()) == i) {
-                    score += tile.getScore();
-                    iterator.remove();  // Use iterator to remove the tile
+    public void updatePlayerScore(String word, char direction, int row, int column) {
+        //for debugging checking to see if called
+        System.out.println("Updating score for word: " + word);  // Debugging line
+
+        int score = Game.calculateScore(word, row, column, direction); // Main word score
+
+        // Check and add scores for new perpendicular words formed
+        for (int i = 0; i < word.length(); i++) {
+            int perpendicularScore = 0;
+
+            if (direction == 'H') {
+                perpendicularScore = Game.calculatePerpendicularWordScore(word, row, column + i, 'V');
+            } else if (direction == 'V') {
+                perpendicularScore = Game.calculatePerpendicularWordScore(word, row + i, column, 'H');
+            }
+
+            score += perpendicularScore;
+        }
+
+        // Update the player's total score
+        this.score += score;
+        System.out.println("Total score for word " + word + ": " + score);
+
+        //Remove the tiles if they have been used
+        for (char s: word.toCharArray()){
+            Iterator<Tiles> iter = tiles.iterator();
+            while(iter.hasNext()){
+                Tiles tile = iter.next();
+                if(tile.getLetter() == Character.toUpperCase(s)){
+                    iter.remove();
                     break;
                 }
             }
+
         }
-        System.out.println("New Score: " + score);
     }
 
     public void playTurn(String word, char direction, int row, int col) {
-        if ((!Game.wordDictionary.containsWord(word)) || (!canFormWordFromTiles(word))) {
-            System.out.println(Game.wordDictionary.containsWord(word) + " " + canFormWordFromTiles(word));
+        if (Game.wordDictionary.containsWord(word) && canFormWordFromTiles(word, board, row, col, direction)) {
             if (place(word, direction, row, col)){
-                updatePlayerScore(word);
+                updatePlayerScore(word, direction, row, col);
                 pickTile();
             }
         }
@@ -92,7 +112,6 @@ public class Player {
                 }
             }
         }
-        //updatePlayerScore(word);
         return true;
     }
 
@@ -119,7 +138,7 @@ public class Player {
         return this.score;
     }
 
-    public boolean canFormWordFromTiles(String word) {
+    public boolean canFormWordFromTiles(String word, Board board, int row, int col, char direction) {
         // Step 1: Count the available tiles
         Map<Character, Integer> tileCount = new HashMap<>();
         for (Tiles tile : tiles) {
@@ -128,13 +147,31 @@ public class Player {
         }
 
 
-        // Step 2: Check each letter in the word
-        for (char letter : word.toCharArray()) {
+        // Step 2: Check each letter in the word and check intersections
+        for (int i = 0; i < word.length(); i++) {
+            char letter = word.charAt(i);
+            boolean isLetterOnBoard = false;
+
+            // Check if the letter is already on the board (part of an intersection)
+            if (direction == 'H') {
+                if (board.getBoard()[row][col + i] != '-' && board.getBoard()[row][col + i] == letter) {
+                    isLetterOnBoard = true;
+                }
+            } else if (direction == 'V') {
+                if (board.getBoard()[row + i][col] != '-' && board.getBoard()[row + i][col] == letter) {
+                    isLetterOnBoard = true;
+                }
+            }
+
+            // If the letter is on the board, no need to use a tile from the player's hand
+            if (isLetterOnBoard) {
+                continue; // Skip this letter since it's already on the board
+            }
+
+            // If the letter is not on the board, player has in their tiles
             if (tileCount.containsKey(letter) && tileCount.get(letter) > 0) {
-                // Decrease count for the letter
-                tileCount.put(letter, tileCount.get(letter) - 1);
+                tileCount.put(letter, tileCount.get(letter) - 1); // Decrease count for the letter
             } else {
-                // Letter not available or used up
                 return false;
             }
         }
