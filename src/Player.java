@@ -95,12 +95,6 @@ public class Player {
                 pickTile();
             }
         }
-        else if (Game.wordDictionary.containsWord(word)){
-            System.out.println("The word is not in the dictionary");
-        }
-        else if(canFormWordFromTiles(word, board, row, col, direction)){
-            System.out.println("Can't form words from tiles");
-        }
     }
 
     //methods

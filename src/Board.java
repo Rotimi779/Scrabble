@@ -24,12 +24,14 @@ public class Board extends JFrame {
         grid = new JPanel(new GridLayout(15,15));
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
-        topPanel = new JPanel(new FlowLayout());
+        topPanel = new JPanel(new GridLayout(2,1));
         roundLabel = new JLabel();
         topPanel.add(roundLabel);
-        add(topPanel, BorderLayout.NORTH);
         scoreLabel = new JLabel("Score: ");
-        add(scoreLabel, BorderLayout.NORTH);
+        topPanel.add(scoreLabel);
+
+        add(topPanel, BorderLayout.NORTH);
+
 
         board = new char[15][15];
         for (int i = 0; i< 15;i++){
@@ -57,10 +59,6 @@ public class Board extends JFrame {
         tiles.setText(playerTiles);
     }
 
-    public JButton[][] getButtons(){
-        return this.buttons;
-    }
-
     public void setController(ScrabbleController controller){
         this.controller = controller;
     }
@@ -76,10 +74,9 @@ public class Board extends JFrame {
             for (int j = 0; j < 15; j++) {
                 int row = i;
                 int col = j;
-                buttons[i][j] = new JButton();
+                buttons[i][j] = new JButton("-");
                 buttons[i][j].setPreferredSize(new Dimension(40, 40));
                 buttons[i][j].addActionListener(e -> controller.handleButtonClick(row, col));
-                buttons[i][j].setText("-");
                 grid.add(buttons[i][j]);
             }
         }
