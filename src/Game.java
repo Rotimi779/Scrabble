@@ -1,7 +1,4 @@
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.Map;
+import java.util.*;
 
 public class Game {
     public static TileBag tilebag;
@@ -181,6 +178,14 @@ public class Game {
 
     public static int calculatePerpendicularWordScore(String word, int row, int column, char direction) {
         int totalPerpendicularScore = 0;
+        Set<String> scoredWords = new HashSet<>();
+
+        // Only in round 1, mark the first word as placed in the set
+        if (round == 1 && !scoredWords.contains(word)) {
+            scoredWords.add(word);  // Mark the first word played as scored
+            System.out.println("First word placed: " + word);
+        }
+
         // Iterate through each character in the main word
         for (int i = 0; i < word.length(); i++) {
             int startRow = row;
@@ -195,24 +200,35 @@ public class Game {
                 startRow = row + i; // Adjust row for each character in the word
             }
 
-            // Form the new perpendicular word if the board spot was empty not filled with a letter from previous word
+            // Form the new perpendicular word if the board spot is empty
             if (Game.board.getBoard()[startRow][startCol] == '-') {
                 String perpendicularWord = newPerpendicularWord(startRow, startCol, direction == 'H' ? 'V' : 'H');
 
-                // Check if this is a new valid perpendicular word
+                // Check if this is a valid perpendicular word
                 if (perpendicularWord.length() > 1 && wordDictionary.containsWord(perpendicularWord)) {
-                    // Debugging line to see the detected perpendicular word
-                    System.out.println("New perpendicular word formed: " + perpendicularWord);
+                    // Skip the perpendicular word if it matches the first word placed during round 1
+                    if (round == 1 && perpendicularWord.equalsIgnoreCase(word)) {
+                        continue;  // Skip this as it's the first word placed
+                    }
 
-                    // Use calculateScore new and improved by rotimi to get the score of the perpendicular word
-                    int perpendicularWordScore = calculatePerpendicularScore(perpendicularWord);
-                    totalPerpendicularScore += perpendicularWordScore;
+                    // Check if the perpendicular word has already been scored to avoid duplication
+                    if (!scoredWords.contains(perpendicularWord)) {
+                        System.out.println("New perpendicular word formed: " + perpendicularWord);
+
+                        // Calculate the score for this perpendicular word
+                        int perpendicularWordScore = calculatePerpendicularScore(perpendicularWord);
+                        totalPerpendicularScore += perpendicularWordScore;
+
+                        // Mark this word as scored
+                        scoredWords.add(perpendicularWord);
+                    }
                 }
             }
         }
 
         return totalPerpendicularScore;
     }
+
 
     public static int calculatePerpendicularScore(String perpendicularWord) {
         int score = 0;
