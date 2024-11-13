@@ -58,12 +58,16 @@ public class Player {
             int perpendicularScore = 0;
 
             if (direction == 'H') {
+                // Check vertically if a new word is created
                 perpendicularScore = Game.calculatePerpendicularWordScore(word, row, column + i, 'V');
             } else if (direction == 'V') {
+                // Check horizontally if a new word is created
                 perpendicularScore = Game.calculatePerpendicularWordScore(word, row + i, column, 'H');
             }
 
             score += perpendicularScore;
+            System.out.println("Perpendicular score added :" + perpendicularScore);
+
         }
 
         // Update the player's total score
