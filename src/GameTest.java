@@ -18,6 +18,11 @@ class GameTest {
 
         // normal/central case
         assertTrue(Game.isValidPlacement(board, "food", 'H', 5, 5));
+        assertTrue(Game.isValidPlacement(board, "food", 'V', 0, 5));
+
+        // overlapping words
+        assertTrue(game.getCurrentPlayer().place("food", 'H', 0, 0));
+        assertFalse(Game.isValidPlacement(board, "jacket", 'H', 0, 0));
 
     }
 
