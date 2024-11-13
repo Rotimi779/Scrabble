@@ -14,7 +14,7 @@ The game keeps track of both players' score, which is calculated by adding the p
 - **End the turn:** The board is displayed, the player’s number of tiles goes back to 7 by taking needed tiles from the bag  and the next player takes their turn.
 
 - **Second turn:** From the second turn, player 2 is initialized with 7 tiles and has to create a word that connects to the word placed on the board by player 1. To do this the player taps on the button where they want their word to start from If the connection create 2 new words, the player get points from both words
-- **
+  
 
 - **End the game:** The game ends when no more tiles in the tile bag and one player uses up the remaining tiles they are holding
 ## RoadMap
