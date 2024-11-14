@@ -53,7 +53,7 @@ public class AIPlayer {
 
         // case 2: player does not have enough tiles to play a valid word
         // it should first look if it can add a suffix or prefix to an existing word, if not then it should pass the turn
-
+        // we might need to keep track of the played words in a static array in game class or something
     }
 
     public void updatePlayerScore(String word, char direction, int row, int column) {
