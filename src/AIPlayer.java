@@ -1,28 +1,44 @@
 import java.util.*;
 
-
-public class Player {
-    private int score =0;
+public class AIPlayer {
+    Board board;
+    private int score;
     private List<Tiles> tiles;
-    private Board board;
-
-    public Player(Board board) {
-        tiles = new ArrayList<>();
-        this.score = 0;
+    public AIPlayer(Board board) {
         this.board = board;
+        this.score = 0;
+        this.tiles = new ArrayList<Tiles>();
     }
 
-    public void addTile(TileBag tileBag) {
-        tiles.add(tileBag.drawTile());
-    }
+    public void playMove() {
+        // finding the best placement on board
+        char[][] board1 = board.getBoard();
+        char maxTile = board1[0][0]; // the maximum tile is the first tile in the board
+        for ( int i = 0; i < board1.length; i++ ) { // iterate over the tiles
+            for ( int j = 0; j < board1[0].length; j++ ) {
+                if (board1[i][j] != '-') { // check if a tile is there
+                    int score = Game.tilebag.getScore(board1[i][j]); // get score of tile
+                    if (score > Game.tilebag.getScore(maxTile)) { //
+                        maxTile = board1[i][j];
+                    }
 
-    public String displayTiles() {
-        StringBuilder str = new StringBuilder("Player");
-        str.append(Game.turn).append("'s tiles:");
-        for (Tiles tile : tiles) {
-            str.append("\t").append("Tile: ").append(tile.getLetter()).append(" Score: ").append(tile.getScore());
+                }
+            }
         }
-        return str.toString();
+
+        // checking for best word from valid words in dictionary
+        StringBuilder word = new StringBuilder();
+        for (Tiles tile : tiles) {
+            word.append(tile.getLetter());
+        }
+        for (String str : Game.wordDictionary.getWords()) {
+            if (canFormWordFromTiles(str, board, 0, 0, 'H')) {
+//                if (place(word, direction, row, col)){
+//                    updatePlayerScore(word, direction, row, col);
+//                    pickTile();
+//                }
+            }
+        }
     }
 
     public void updatePlayerScore(String word, char direction, int row, int column) {
@@ -66,16 +82,10 @@ public class Player {
         }
     }
 
-    public void playTurn(String word, char direction, int row, int col) {
-        if (Game.wordDictionary.containsWord(word) && canFormWordFromTiles(word, board, row, col, direction)) {
-            if (place(word, direction, row, col)){
-                updatePlayerScore(word, direction, row, col);
-                pickTile();
-            }
-        }
-    }
+//    private BestMove calculateBestMove() {
+//
+//    }
 
-    //methods
     public boolean place(String word, char direction, int row, int column) {
         for (int i = 0; i < word.length(); i++) {
             if (direction == 'H') {
@@ -95,6 +105,19 @@ public class Player {
             }
         }
         return true;
+    }
+
+    public String displayTiles() {
+        StringBuilder str = new StringBuilder("AI Player");
+        str.append(Game.turn).append("'s tiles:");
+        for (Tiles tile : tiles) {
+            str.append("\t").append("Tile: ").append(tile.getLetter()).append(" Score: ").append(tile.getScore());
+        }
+        return str.toString();
+    }
+
+    public void addTile(TileBag tileBag) {
+        tiles.add(tileBag.drawTile());
     }
 
     public void pickTile() {

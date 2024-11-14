@@ -112,6 +112,4 @@ public class Board extends JFrame {
         scoreLabel.repaint();
     }
 
-
-
 }

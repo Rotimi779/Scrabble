@@ -28,6 +28,9 @@ class GameTest {
 
     @org.junit.jupiter.api.Test
     void calculateScore() {
+        board = new Board();
+        game = new Game(board);
+        assertEquals(Game.calculateScore("sit", 0, 0, 'H'), 3);
     }
 
     @org.junit.jupiter.api.Test
