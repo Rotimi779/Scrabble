@@ -13,32 +13,47 @@ public class AIPlayer {
     public void playMove() {
         // finding the best placement on board
         char[][] board1 = board.getBoard();
+        int row = 0;
+        int col = 0;
         char maxTile = board1[0][0]; // the maximum tile is the first tile in the board
         for ( int i = 0; i < board1.length; i++ ) { // iterate over the tiles
             for ( int j = 0; j < board1[0].length; j++ ) {
                 if (board1[i][j] != '-') { // check if a tile is there
                     int score = Game.tilebag.getScore(board1[i][j]); // get score of tile
-                    if (score > Game.tilebag.getScore(maxTile)) { //
-                        maxTile = board1[i][j];
+                    if (score > Game.tilebag.getScore(maxTile)) { // swap for the bigger tile
+                        if (board1[i+1][j] == '-' || board1[i][j+1] == '-' || board1[i-1][j] == '-' || board1[i][j-1] == '-') {
+                            row = i;
+                            col = j;
+                            maxTile = board1[i][j]; // basically checking if it has a space for a new word to be formed with it
+                        }
+
                     }
 
                 }
             }
         }
 
+        // case 1: if placing a whole word
         // checking for best word from valid words in dictionary
-        StringBuilder word = new StringBuilder();
-        for (Tiles tile : tiles) {
-            word.append(tile.getLetter());
-        }
         for (String str : Game.wordDictionary.getWords()) {
-            if (canFormWordFromTiles(str, board, 0, 0, 'H')) {
-//                if (place(word, direction, row, col)){
-//                    updatePlayerScore(word, direction, row, col);
-//                    pickTile();
-//                }
+            if (canFormWordFromTiles(str, board, 0, 0, 'H')) { // checks if it can form the word horizontally
+                if (place(str, 'H', row, col)){
+                    updatePlayerScore(str, 'H', row, col);
+                    pickTile();
+                    return;
+                }
+            } else if (canFormWordFromTiles(str, board, 0, 0, 'V')) { // checks if it can form the word vertically
+                if (place(str, 'V', row, col)){
+                    updatePlayerScore(str, 'V', row, col);
+                    pickTile();
+                    return;
+                }
             }
         }
+
+        // case 2: player does not have enough tiles to play a valid word
+        // it should first look if it can add a suffix or prefix to an existing word, if not then it should pass the turn
+
     }
 
     public void updatePlayerScore(String word, char direction, int row, int column) {
