@@ -36,13 +36,13 @@ public class AIPlayer {
         // case 1: if placing a whole word
         // checking for best word from valid words in dictionary
         for (String str : Game.wordDictionary.getWords()) {
-            if (canFormWordFromTiles(str, board, 0, 0, 'H')) { // checks if it can form the word horizontally
+            if (canFormWordFromTiles(str, board, row, col, 'H')) { // checks if it can form the word horizontally
                 if (place(str, 'H', row, col)){
                     updatePlayerScore(str, 'H', row, col);
                     pickTile();
                     return;
                 }
-            } else if (canFormWordFromTiles(str, board, 0, 0, 'V')) { // checks if it can form the word vertically
+            } else if (canFormWordFromTiles(str, board, row, col, 'V')) { // checks if it can form the word vertically
                 if (place(str, 'V', row, col)){
                     updatePlayerScore(str, 'V', row, col);
                     pickTile();
@@ -54,6 +54,8 @@ public class AIPlayer {
         // case 2: player does not have enough tiles to play a valid word
         // it should first look if it can add a suffix or prefix to an existing word, if not then it should pass the turn
         // we might need to keep track of the played words in a static array in game class or something
+        // we could use a hash map to map from the played word to its location and direction as a string (format: "rcd")
+        // r - row, c - column, d - direction
     }
 
     public void updatePlayerScore(String word, char direction, int row, int column) {

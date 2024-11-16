@@ -20,7 +20,7 @@ public class Player {
         StringBuilder str = new StringBuilder("Player");
         str.append(Game.turn).append("'s tiles:");
         for (Tiles tile : tiles) {
-            str.append("\t").append("Tile: ").append(tile.getLetter()).append(" Score: ").append(tile.getScore());
+            str.append("\t").append("Tile: ").append(tile.getLetter()).append("(").append(tile.getScore()).append(") ");
         }
         return str.toString();
     }
