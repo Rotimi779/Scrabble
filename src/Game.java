@@ -10,6 +10,9 @@ public class Game {
     public static int round = 1;
     public static int firstOrSecond = 1;
 
+    private static Set<String> scoredWords = new HashSet<>();
+
+
     public Game(Board board) {
         // initializations
         tilebag = new TileBag();
@@ -178,7 +181,6 @@ public class Game {
 
     public static int calculatePerpendicularWordScore(String word, int row, int column, char direction) {
         int totalPerpendicularScore = 0;
-        Set<String> scoredWords = new HashSet<>();
 
         // Only in round 1, mark the first word as placed in the set
         if (round == 1 && !scoredWords.contains(word)) {
