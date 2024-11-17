@@ -23,6 +23,12 @@ public class ScrabbleController {
         if (playEvent.getWord() != null && !playEvent.getWord().isEmpty() && direction != null && (direction.equalsIgnoreCase("H") || direction.equalsIgnoreCase("V"))) {
             char dirChar = direction.equalsIgnoreCase("H") ? 'H' : 'V';
 
+            if (!Game.wordDictionary.containsWord(playEvent.getWord())) {
+                // Display invalid word pop-up
+                board.displayInvalidWord();
+                return;
+            }
+
             if (Game.isValidPlacement(board, playEvent.getWord(), dirChar, row, col)) {
                 game.play(playEvent.getWord(), dirChar, row, col);
                 board.updateBoardDisplay();

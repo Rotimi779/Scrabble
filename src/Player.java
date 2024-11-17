@@ -67,11 +67,17 @@ public class Player {
     }
 
     public void playTurn(String word, char direction, int row, int col) {
-        if (Game.wordDictionary.containsWord(word) && canFormWordFromTiles(word, board, row, col, direction)) {
-            if (place(word, direction, row, col)){
-                updatePlayerScore(word, direction, row, col);
-                pickTile();
-            }
+        if (!Game.wordDictionary.containsWord(word)){
+            board.displayInvalidWord();
+        }
+
+        if (!canFormWordFromTiles(word, board, row, col, direction)) {
+            board.displayInvalidPlacement();
+        }
+
+        if (place(word, direction, row, col)){
+            updatePlayerScore(word, direction, row, col);
+            pickTile();
         }
     }
 
