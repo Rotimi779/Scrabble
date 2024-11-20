@@ -107,7 +107,7 @@ public class Board extends JFrame {
     }
 
     public void updateScoreLabel(int score) {
-        scoreLabel.setText("Player " + Game.firstOrSecond + "'s turn. " + "Player " + Game.firstOrSecond  +"'s Score: " + score);
+        scoreLabel.setText("Player " + Game.turn + "'s turn. " + "Player " + Game.turn  +"'s Score: " + score);
         scoreLabel.revalidate();
         scoreLabel.repaint();
     }

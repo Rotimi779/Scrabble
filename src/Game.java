@@ -8,7 +8,8 @@ public class Game {
     public ArrayList<Player> players;
     private static Player currentPlayer;
     public static int round = 1;
-    public static int firstOrSecond = 1;
+//    public static int firstOrSecond = 1;
+    private final Map<String, String> playedList;
 
     public Game(Board board) {
         // initializations
@@ -17,17 +18,21 @@ public class Game {
         this.players = new ArrayList<>();
         Player player1 = new Player(board);
         Player player2 = new Player(board);
+        AIPlayer aiPlayer = new AIPlayer(board);
         currentPlayer = player1;
-        this.board = board;
+        playedList = new HashMap<>();
+        Game.board = board;
 
         // Give the players their tiles
         for (int i = 0; i < 7; i ++){
             player1.addTile(tilebag);
             player2.addTile(tilebag);
+            aiPlayer.addTile(tilebag);
         }
 
         players.add(player1);
         players.add(player2);
+        players.add(aiPlayer);
 
         // Initialize the board and start the game
         turn = 1;
@@ -35,21 +40,50 @@ public class Game {
     }
 
     public void play(String word, char direction, int row, int col) {
-        currentPlayer.playTurn(word, direction, row, col);
-        switchTurn();
+        if (currentPlayer instanceof AIPlayer aiPlayer) {
+            System.out.println("I am AI and I rule!!!!");
+            if (aiPlayer.playTurn()){
+                System.out.println("AIPlayer " + currentPlayer + " has played a tile.");
+                switchTurn();
+            }else{
+                aiPlayer.playTurn();
+            }
+        }else{
+            if (currentPlayer.playTurn(word, direction, row, col)){
+                // store the words that have been played in the game
+                String value = row + col + String.valueOf(direction);
+                playedList.put(word, value);
+                switchTurn();
+            }
+        }
+
     }
 
     public void switchTurn(){
         round++;
-        if (turn == 1){
-            turn = 2;
-            currentPlayer = players.get(1);
-            firstOrSecond = 2;
-        } else if (turn == 2) {
-            turn = 1;
-            currentPlayer = players.get(0);
-            firstOrSecond = 1;
+        turn = round % (players.size() + 1);
+        currentPlayer = players.get((round - 1) % players.size());
+        if (currentPlayer instanceof AIPlayer aiPlayer){
+            boolean played = false;
+            System.out.println("I am AI and I rule!!!!");
+            for (int i = 0; i < 7 && !played; i++) {
+                if (aiPlayer.playTurn()) {
+                    played = true;
+                    System.out.println("AIPlayer " + currentPlayer + " has played a tile.");
+                } else {
+                    aiPlayer.playTurn();
+                }
+            }
         }
+//        if (turn == 1){
+//            turn = 2;
+//            currentPlayer = players.get(1);
+////            firstOrSecond = 2;
+//        } else if (turn == 2) {
+//            turn = 1;
+//            currentPlayer = players.get(0);
+////            firstOrSecond = 1;
+//        }
     }
 
     public static int getRound(){

@@ -1,7 +1,7 @@
 import java.util.*;
 
 
-public class Player {
+public class Player{
     private int score =0;
     private List<Tiles> tiles;
     private Board board;
@@ -66,13 +66,17 @@ public class Player {
         }
     }
 
-    public void playTurn(String word, char direction, int row, int col) {
+    public boolean playTurn(String word, char direction, int row, int col) {
         if (Game.wordDictionary.containsWord(word) && canFormWordFromTiles(word, board, row, col, direction)) {
             if (place(word, direction, row, col)){
                 updatePlayerScore(word, direction, row, col);
                 pickTile();
+                return true;
             }
+        }else{
+            System.out.println("Invalid word");
         }
+        return false;
     }
 
     //methods

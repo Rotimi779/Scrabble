@@ -23,21 +23,24 @@ public class ScrabbleController {
         if (playEvent.getWord() != null && !playEvent.getWord().isEmpty() && direction != null && (direction.equalsIgnoreCase("H") || direction.equalsIgnoreCase("V"))) {
             char dirChar = direction.equalsIgnoreCase("H") ? 'H' : 'V';
 
-            if (Game.isValidPlacement(board, playEvent.getWord(), dirChar, row, col)) {
-                game.play(playEvent.getWord(), dirChar, row, col);
-                board.updateBoardDisplay();
-
-                // Update player score
-                //game.getCurrentPlayer().updatePlayerScore(playEvent.getWord(), dirChar, row, col);
-
-
-                // Update score display on GUI
-                int playerScore = game.getCurrentPlayer().getPlayerScore();
-                board.updateScoreLabel(playerScore);
-                //System.out.println("Player's current score: " + playerScore);
-
-            } else {
+            if (!game.getCurrentPlayer().canFormWordFromTiles(playEvent.getWord(), board, row, col, dirChar)) {
+                board.displayInvalidWord();
+            } else if (!Game.isValidPlacement(board, playEvent.getWord(), dirChar, row, col)) {
                 board.displayInvalidPlacement();
+            }else {
+                if (!(game.getCurrentPlayer() instanceof AIPlayer)){
+                    game.play(playEvent.getWord(), dirChar, row, col);
+                    board.updateBoardDisplay();
+
+                    // Update player score
+                    //game.getCurrentPlayer().updatePlayerScore(playEvent.getWord(), dirChar, row, col);
+
+
+                    // Update score display on GUI
+                    int playerScore = game.getCurrentPlayer().getPlayerScore();
+                    board.updateScoreLabel(playerScore);
+                    //System.out.println("Player's current score: " + playerScore);
+                }
             }
         } else {
             // Handle invalid word or direction
