@@ -1,7 +1,7 @@
 import java.util.*;
 
 
-public class Player{
+public class Player {
     private int score =0;
     private List<Tiles> tiles;
     private Board board;
@@ -76,7 +76,6 @@ public class Player{
         }else{
             System.out.println("Invalid word");
         }
-        return false;
     }
 
     //methods
