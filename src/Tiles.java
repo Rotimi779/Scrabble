@@ -14,4 +14,8 @@ public class Tiles {
     public int getScore(){
         return this.score;
     }
+
+    public void setLetter(char letter){ this.letter = letter;}
+
+    public void setScore(char letter){ this.score = TileBag.getScoreForTile(letter);}
 }

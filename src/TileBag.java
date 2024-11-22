@@ -40,7 +40,7 @@ public class TileBag {
         addTiles('X', 8, 1);
         addTiles('Y', 4, 2);
         addTiles('Z', 10, 1);
-        //addTiles('_', 0, 2); // Blank tiles
+        addTiles('_', 0, 2); // Blank tiles
     }
 
     private void addTiles(char letter, int score, int count) {
@@ -84,6 +84,10 @@ public class TileBag {
 
     public static List<Tiles> getBag() {
         return bag;
+    }
+
+    public static int getScoreForTile(char letter){
+        return scoreMap.getOrDefault(letter, 0);  // Get score from map, defaulting to 0
     }
 
 }
