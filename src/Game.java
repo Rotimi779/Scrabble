@@ -142,11 +142,31 @@ public class Game {
                 }
             }
 
+
             // Validate perpendicular word creation
             String perpendicularWord = newPerpendicularWord( row + (direction == 'V' ? i : 0), column + (direction == 'H' ? i : 0), direction);
             if (perpendicularWord.length() > 1 && !isValidWord(perpendicularWord)) {
                 return false;
             }
+        }
+
+        if(round == 1){
+            boolean touchesMiddleTile = false;
+
+            for (int i = 0; i < word.length(); i++) {
+                int currentRow = row + (direction == 'V' ? i : 0);
+                int currentCol = column + (direction == 'H' ? i : 0);
+
+                if (currentRow == 7 && currentCol == 7) {
+                    touchesMiddleTile = true;
+                    break;
+                }
+            }
+
+            if (!touchesMiddleTile) {
+                return false;
+            }
+
         }
 
         // For rounds > 1, ensure there's at least one adjacent tile
