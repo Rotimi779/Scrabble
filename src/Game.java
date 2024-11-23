@@ -435,6 +435,12 @@ public class Game {
                 startRow = row + i; // Adjust row for each character in the word
             }
 
+            // **Boundary Check**
+            if (startRow < 0 || startRow >= Game.board.getBoard().length ||
+                    startCol < 0 || startCol >= Game.board.getBoard()[0].length) {
+                continue; // Skip processing if out of bounds
+            }
+
             // Form the new perpendicular word if the board spot is empty
             if (Game.board.getBoard()[startRow][startCol] == '-') {
                 String perpendicularWord = newPerpendicularWord(startRow, startCol, direction == 'H' ? 'V' : 'H');
