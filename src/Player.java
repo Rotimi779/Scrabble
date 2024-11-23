@@ -76,6 +76,7 @@ public class Player {
         }else{
             System.out.println("Invalid word");
         }
+        return false;
     }
 
     //methods
