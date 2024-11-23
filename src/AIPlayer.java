@@ -24,35 +24,52 @@ public class AIPlayer extends Player {
         // get a subset of legal moves
         for (String str : Game.wordDictionary.getWords()) {
             for (int i = 0; i < 14; i++){
-                System.out.println("This is the row: "+ i);
+//                System.out.println("This is the row: "+ i);
                 for (int j = 0; j < 14; j++){
-                    System.out.println("This is the column: "+ j);
-                    if (canFormWordFromTiles(str, board, i, j, 'H') && Game.isValidPlacement(board, str, 'H', i, j)){
-                        legalMoves.add(new LegalMove(i, j, 'H', str));
-                    }else if (canFormWordFromTiles(str, board, i, j, 'V') && Game.isValidPlacement(board, str, 'V', i, j)){
-                        legalMoves.add(new LegalMove(i, j, 'V', str));
+//                    System.out.println("This is the column: "+ j);
+                    if (board1[i][j] != '-'){
+                        if (str.contains(tileString.append(board1[i][j]))){
+
+                        }
+                        if (canFormWordFromTiles(str, board, i, j, 'H') && Game.isValidPlacement(board, str, 'H', i, j)){
+                            legalMoves.add(new LegalMove(i, j, 'H', str));
+                        }else if (canFormWordFromTiles(str, board, i, j, 'V') && Game.isValidPlacement(board, str, 'V', i, j)){
+                            legalMoves.add(new LegalMove(i, j, 'V', str));
+                        }
                     }
+
                 }
             }
         }
+//        System.out.println(legalMoves.size());
+//        for (LegalMove move : legalMoves) {
+//            System.out.println("Word: " + move.getWord());
+//            System.out.println("Row: " + move.getRow());
+//            System.out.println("Col: " + move.getCol());
+//            System.out.println("Direction: " + move.getDirection());
+//        }
 
         // compute the highest scoring legal word
         int max_score = 0;
         int position = -1;
         for (LegalMove move : legalMoves) {
-            String wrd = move.getWord();
-            int curr_score = 0;
-            for (char letter : wrd.toCharArray()) {
-                curr_score += Game.tilebag.getScore(letter);
-            }
+//            String wrd = move.getWord();
+//            int curr_score = 0;
+//            for (char letter : wrd.toCharArray()) {
+//                curr_score += Game.tilebag.getScore(letter);
+//            }
+            int curr_score = Game.calculateScore(move.getWord(), move.getRow(), move.getCol(), move.getDirection());
+            System.out.println("Curr score: " + curr_score);
             if (curr_score > max_score) {
                 max_score = curr_score;
                 position = legalMoves.indexOf(move);
             }
         }
+        System.out.println("Max score: " + max_score);
 
         if (position != -1) {
             LegalMove move = legalMoves.get(position);
+            System.out.println("Legal move word: " + move.getWord());
             place(move.getWord(), move.getDirection(), move.getRow(), move.getCol());
             legalMoves.remove(move);
         }else{

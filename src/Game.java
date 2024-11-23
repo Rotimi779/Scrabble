@@ -1,6 +1,7 @@
 import javax.swing.*;
 import java.awt.*;
 import java.util.*;
+import java.util.List;
 
 public class Game {
     public static TileBag tilebag;
@@ -14,6 +15,7 @@ public class Game {
     private final Map<String, String> playedList;
 
     private static Set<String> scoredWords = new HashSet<>();
+    private List<Observer> observers = new ArrayList<>();
 
 
     public Game(Board board) {
@@ -44,15 +46,28 @@ public class Game {
         System.out.println("Welcome to the Game of Scrabble");
     }
 
+//    public void addObserver(Observer observer) {
+//        observers.add(observer);
+//    }
+//
+//    private void notifyObservers() {
+//        if (currentPlayer instanceof AIPlayer) {
+//            for (Observer observer : observers) {
+//                observer.update();
+//            }
+//        }
+//
+//    }
+
     public void play(String word, char direction, int row, int col) {
         if (currentPlayer instanceof AIPlayer aiPlayer) {
-            System.out.println("I am AI and I rule!!!!");
-            if (aiPlayer.playTurn()){
-                System.out.println("AIPlayer " + currentPlayer + " has played a tile.");
-                switchTurn();
-            }else{
-                aiPlayer.playTurn();
-            }
+            System.out.println("This is an AI player");
+//            if (aiPlayer.playTurn()) {
+//                System.out.println("AIPlayer " + currentPlayer + " has played a tile.");
+//                switchTurn();
+//            }else{
+//                System.out.println("AIPlayer " + currentPlayer + " did not play a tile.");
+//            }
         }else{
             if (currentPlayer.playTurn(word, direction, row, col)){
                 // store the words that have been played in the game
@@ -66,18 +81,19 @@ public class Game {
 
     public void switchTurn(){
         round++;
-        turn = round % (players.size() + 1);
+        if (round % players.size() == 0) {
+            turn = round;
+        }else{
+            turn = (round % players.size());
+        }
+
         currentPlayer = players.get((round - 1) % players.size());
         if (currentPlayer instanceof AIPlayer aiPlayer){
             boolean played = false;
             System.out.println("I am AI and I rule!!!!");
 
-            if (aiPlayer.playTurn()) {
-                played = true;
-                System.out.println("AIPlayer " + currentPlayer + " has played a tile.");
-            } else {
-                aiPlayer.playTurn();
-            }
+            aiPlayer.playTurn();
+            switchTurn();
 
         }
 //        if (turn == 1){

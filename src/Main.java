@@ -8,8 +8,6 @@ public class Main {
         Game game = new Game(board);
         ScrabbleController controller = new ScrabbleController(game,board);
 
-
-
     }
 
 }
