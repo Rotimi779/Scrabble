@@ -1,3 +1,5 @@
+import javax.swing.*;
+import java.awt.*;
 import java.util.*;
 
 public class Game {
@@ -140,11 +142,31 @@ public class Game {
                 }
             }
 
+
             // Validate perpendicular word creation
             String perpendicularWord = newPerpendicularWord( row + (direction == 'V' ? i : 0), column + (direction == 'H' ? i : 0), direction);
             if (perpendicularWord.length() > 1 && !isValidWord(perpendicularWord)) {
                 return false;
             }
+        }
+
+        if(round == 1){
+            boolean touchesMiddleTile = false;
+
+            for (int i = 0; i < word.length(); i++) {
+                int currentRow = row + (direction == 'V' ? i : 0);
+                int currentCol = column + (direction == 'H' ? i : 0);
+
+                if (currentRow == 7 && currentCol == 7) {
+                    touchesMiddleTile = true;
+                    break;
+                }
+            }
+
+            if (!touchesMiddleTile) {
+                return false;
+            }
+
         }
 
         // For rounds > 1, ensure there's at least one adjacent tile
@@ -188,6 +210,7 @@ public class Game {
     private static boolean isValidWord(String word){
         return wordDictionary.containsWord(word);
     }
+
     public Player getCurrentPlayer() {
         return currentPlayer;
     }
@@ -195,21 +218,181 @@ public class Game {
     public static int calculateScore(String word, int row, int column, char direction) {
 
         int score = 0;
-        System.out.println(word);
-        for (char c: word.toCharArray()){
-            Iterator<Tiles> iter = currentPlayer.getTiles().iterator();
-            while(iter.hasNext()){
-                Tiles tile = iter.next();
-                //System.out.println("The letter is ");
-                if(tile.getLetter() == Character.toUpperCase(c)){
+        for (int i = 0; i < word.length(); i++){
+            if (direction == 'H'){
+                //If color is blue, triple the letter score
+                if (board.getButtons()[row][column + i].getBackground().equals(Color.blue)){
+                    Iterator<Tiles> iter = currentPlayer.getTiles().iterator();
+                    while(iter.hasNext()){
+                        Tiles tile = iter.next();
+                        //System.out.println("The letter is ");
+                        if(tile.getLetter() == Character.toUpperCase(word.charAt(i))){
+                            //For handling blank tiles
+                            if (word.charAt(i) == '_'){
+                                System.out.println("This is an empty tile");
+                                String emptyTile = JOptionPane.showInputDialog("Enter a letter for the letter you want to replace the empty tile");
+                                tile.setLetter(emptyTile.charAt(0));
+                                tile.setScore(emptyTile.charAt(0));
+                            }
 
-                    System.out.println(tile.getScore());
+                            System.out.println("Horizontal blue and the word is " + tile.getLetter() + " score is " + tile.getScore());
 
-                    score += tile.getScore();
-                    break;
+                            score += (tile.getScore() * 3);
+                            break;
+                        }
+                    }
+                }
+                //If color is cyan, double the letter score
+                else if (board.getButtons()[row][column + i].getBackground().equals(Color.cyan)){
+                    Iterator<Tiles> iter = currentPlayer.getTiles().iterator();
+                    while(iter.hasNext()){
+                        Tiles tile = iter.next();
+                        //System.out.println("The letter is ");
+                        if(tile.getLetter() == Character.toUpperCase(word.charAt(i))){
+                            //For handling blank tiles
+                            if (word.charAt(i) == '_'){
+                                System.out.println("This is an empty tile");
+                                String emptyTile = JOptionPane.showInputDialog("Enter a letter for the letter you want to replace the empty tile");
+                                tile.setLetter(emptyTile.charAt(0));
+                                tile.setScore(emptyTile.charAt(0));
+                            }
+
+                            System.out.println("Horizontal cyan and the word is " + tile.getLetter() + " score is " + tile.getScore());
+
+                            score += (tile.getScore() * 2);
+                            break;
+                        }
+                    }
+                }
+                else{
+                    Iterator<Tiles> iter = currentPlayer.getTiles().iterator();
+                    while(iter.hasNext()){
+                        Tiles tile = iter.next();
+                        if(tile.getLetter() == Character.toUpperCase(word.charAt(i))) {
+                            //For handling blank tiles
+                            if (word.charAt(i) == '_') {
+                                System.out.println("This is an empty tile");
+                                String emptyTile = JOptionPane.showInputDialog("Enter a letter for the letter you want to replace the empty tile");
+                                tile.setLetter(emptyTile.charAt(0));
+                                tile.setScore(emptyTile.charAt(0));
+                            }
+
+                            score += tile.getScore();
+                            break;
+                        }
+                    }
+                }
+            }
+            else if(direction == 'V'){
+                //If color is blue, triple the letter score
+                if (board.getButtons()[row + i][column].getBackground().equals(Color.blue)){
+                    Iterator<Tiles> iter = currentPlayer.getTiles().iterator();
+                    while(iter.hasNext()){
+                        Tiles tile = iter.next();
+                        //System.out.println("The letter is ");
+                        if(tile.getLetter() == Character.toUpperCase(word.charAt(i))){
+                            //For handling blank tiles
+                            if (word.charAt(i) == '_'){
+                                System.out.println("This is an empty tile");
+                                String emptyTile = JOptionPane.showInputDialog("Enter a letter for the letter you want to replace the empty tile");
+                                tile.setLetter(emptyTile.charAt(0));
+                                tile.setScore(emptyTile.charAt(0));
+                            }
+
+                            System.out.println("Vertical blue and the word is " + tile.getLetter() + " score is " + tile.getScore());
+
+                            score += (tile.getScore() * 3);
+                            break;
+                        }
+                    }
+
+                }
+                //If color is cyan, double the letter score
+                else if (board.getButtons()[row + i][column].getBackground().equals(Color.cyan)){
+                    Iterator<Tiles> iter = currentPlayer.getTiles().iterator();
+                    while(iter.hasNext()){
+                        Tiles tile = iter.next();
+                        //System.out.println("The letter is ");
+                        if(tile.getLetter() == Character.toUpperCase(word.charAt(i))){
+                            //For handling blank tiles
+                            if (word.charAt(i) == '_'){
+                                System.out.println("This is an empty tile");
+                                String emptyTile = JOptionPane.showInputDialog("Enter a letter for the letter you want to replace the empty tile");
+                                tile.setLetter(emptyTile.charAt(0));
+                                tile.setScore(emptyTile.charAt(0));
+                            }
+
+                            System.out.println("Vertical cyan and the word is " + tile.getLetter() + " score is " + tile.getScore());
+
+                            score += (tile.getScore() * 2);
+                            break;
+                        }
+                    }
+                }
+                else{
+                    Iterator<Tiles> iter = currentPlayer.getTiles().iterator();
+                    while(iter.hasNext()){
+                        Tiles tile = iter.next();
+                        if(tile.getLetter() == Character.toUpperCase(word.charAt(i))) {
+                            //For handling blank tiles
+                            if (word.charAt(i) == '_') {
+                                System.out.println("This is an empty tile");
+                                String emptyTile = JOptionPane.showInputDialog("Enter a letter for the letter you want to replace the empty tile");
+                                tile.setLetter(emptyTile.charAt(0));
+                                tile.setScore(emptyTile.charAt(0));
+                            }
+
+                            score += tile.getScore();
+                            break;
+                        }
+                    }
                 }
             }
         }
+        for (int i = 0; i < word.length(); i++){
+            if (direction == 'H') {
+                //If color is red, triple the word score
+                if (board.getButtons()[row][column + i].getBackground().equals(Color.red)) {
+                    score = score * 3;
+                }
+                //If color is pink, double the word score
+                if (board.getButtons()[row][column + i].getBackground().equals(Color.pink)) {
+                    score = score * 2;
+                }
+            }
+            else if (direction == 'V'){
+                //If color is red, triple the word score
+                if (board.getButtons()[row + i][column].getBackground().equals(Color.red)) {
+                    score = score * 3;
+                }
+                //If color is pink, double the word score
+                if (board.getButtons()[row + i][column].getBackground().equals(Color.pink)) {
+                    score = score * 2;
+                }
+            }
+        }
+
+//        for (char c: word.toCharArray()){
+//            Iterator<Tiles> iter = currentPlayer.getTiles().iterator();
+//            while(iter.hasNext()){
+//                Tiles tile = iter.next();
+//                //System.out.println("The letter is ");
+//                if(tile.getLetter() == Character.toUpperCase(c)){
+//                    //For handling blank tiles
+//                    if (c == '_'){
+//                        System.out.println("This is an empty tile");
+//                        String emptyTile = JOptionPane.showInputDialog("Enter a letter for the letter you want to replace the empty tile");
+//                        tile.setLetter(emptyTile.charAt(0));
+//                        tile.setScore(emptyTile.charAt(0));
+//                    }
+//
+//                    System.out.println(tile.getScore());
+//
+//                    score += tile.getScore();
+//                    break;
+//                }
+//            }
+//        }
         return score;
     }
 
