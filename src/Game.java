@@ -71,14 +71,14 @@ public class Game {
         if (currentPlayer instanceof AIPlayer aiPlayer){
             boolean played = false;
             System.out.println("I am AI and I rule!!!!");
-            for (int i = 0; i < 7 && !played; i++) {
-                if (aiPlayer.playTurn()) {
-                    played = true;
-                    System.out.println("AIPlayer " + currentPlayer + " has played a tile.");
-                } else {
-                    aiPlayer.playTurn();
-                }
+
+            if (aiPlayer.playTurn()) {
+                played = true;
+                System.out.println("AIPlayer " + currentPlayer + " has played a tile.");
+            } else {
+                aiPlayer.playTurn();
             }
+
         }
 //        if (turn == 1){
 //            turn = 2;

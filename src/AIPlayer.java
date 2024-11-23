@@ -161,6 +161,13 @@ public class AIPlayer extends Player {
     }
 
     public boolean canFormWordFromTiles(String word, Board board, int row, int col, char direction) {
+
+        // Step 0: Check bounds to prevent ArrayIndexOutOfBoundsException
+        if ((direction == 'H' && col + word.length() > board.getBoard()[0].length) ||
+                (direction == 'V' && row + word.length() > board.getBoard().length)) {
+            return false; // Word placement exceeds board boundaries
+        }
+
         // Step 1: Count the available tiles
         Map<Character, Integer> tileCount = new HashMap<>();
         for (Tiles tile : tiles) {
