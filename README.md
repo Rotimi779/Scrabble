@@ -1,9 +1,9 @@
 # Scrabble
-This is a Scrabble game implemented in Java, using an MVC design pattern. The project allows two players to play Scrabble, where words are placed on a 15x15 board made up of buttons, tiles are drawn from a bag, and a dictionary is used to determine if the words placed down are valid.
-The game keeps track of both players' score, which is calculated by adding the points of each letter in the word or words they create.The game then ends when there are no more tiles to draw from the bag and one player uses up the tiles in their collection.
+This is a Scrabble game implemented in Java, using an MVC design pattern. The project allows two players - or a player and AI - to play Scrabble, where words are placed on a 15x15 board made up of buttons, tiles are drawn from a bag, and a dictionary is used to determine if the words placed down are valid.
+The game keeps track of every player's score, which is calculated by adding the points of each letter in the word or words they create.The game then ends when there are no more tiles to draw from the bag and one player uses up the tiles in their collection.
 
 ## How to play
-- **Starting the game:** When the game starts, the first player is initialized with seven tiles. Each tile will display its value.
+- **Starting the game:** In the current implementation of the game, the game runs with two players and one AI. When the game starts, the first player is initialized with seven tiles. Each tile will display its value.
 
 - **First turn:** Player can choose to either play their turn or pass their turn 
 
@@ -13,19 +13,18 @@ The game keeps track of both players' score, which is calculated by adding the p
 
 - **End the turn:** The board is displayed, the player’s number of tiles goes back to 7 by taking needed tiles from the bag  and the next player takes their turn.
 
-- **Second turn:** From the second turn, player 2 is initialized with 7 tiles and has to create a word that connects to the word placed on the board by player 1. To do this the player taps on the button where they want their word to start from If the connection create 2 new words, the player get points from both words
+- **Second turn:** From the second turn, player 2 is initialized with 7 tiles and has to create a word that connects to the word placed on the board by player 1. To do this the player taps on the button where they want their word to start from. If the connection create 2 new words, the player get points from both words.
   
-
+- ** AI player's turn: The AI player decides what the best word is to play by checking it's tiles and the tiles that have been placed on the board then places it on the board. **
+  
 - **End the game:** The game ends when no more tiles in the tile bag and one player uses up the remaining tiles they are holding
+  
 ## RoadMap
-- **Deliverable 3:** addition of blank tiles, premium squares and the ability to use any number of AI players.
 - **Deliverable 4:** multiple level undo/redo, save/load features and customization of board with alternate premium squares
 
 ## Issues
-### Intersecting tiles implementation 
-The program recognizes words that have already been placed as a new perpendicular word which it adds the score of to the total score.
+### Add issues here
 
-There is also an issue where it skips the turn of the player if the word they place cannot be made up of theri tiles
 
 ## Future implementation
 
@@ -33,7 +32,7 @@ There is also an issue where it skips the turn of the player if the word they pl
 ### Allowing players to quit the game
 ### Multiple level undo/redo
 ### Save and load features
-### Custom boards with alternate placement of premium squares
+
 ## Developers
 Rotimi Ajayi
 
