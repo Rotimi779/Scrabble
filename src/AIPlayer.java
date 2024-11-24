@@ -38,6 +38,7 @@ public class AIPlayer extends Player {
                 }
             }
         }
+        //repush
 //        System.out.println(legalMoves.size());
 //        for (LegalMove move : legalMoves) {
 //            System.out.println("Word: " + move.getWord());
