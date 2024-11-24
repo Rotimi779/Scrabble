@@ -517,13 +517,4 @@ public class Game {
         return score;
     }
 
-
-    public static int getTileScore(char letter) {
-        for (Tiles tile : TileBag.getBag()) {
-            if (tile.getLetter() == letter) {
-                return tile.getScore();
-            }
-        }
-        return 0; // default if tile not found
-    }
 }

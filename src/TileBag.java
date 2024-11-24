@@ -12,8 +12,7 @@ public class TileBag {
         random = new Random();
         initializeBag();
     }
-
-    private void initializeBag() {
+    public void initializeBag() {
         addTiles('A', 1, 9);
         addTiles('B', 3, 2);
         addTiles('C', 3, 2);
@@ -64,24 +63,6 @@ public class TileBag {
         bag.remove(index);
         return tile;
     }
-
-    // Return a tile to the bag
-    public void returnTile(Tiles tile) {
-        bag.add(tile);
-    }
-
-    // Check how many tiles are left in the bag
-    public int tilesRemaining() {
-        return bag.size();
-    }
-
-    // Display all tiles currently in the bag (for debugging)
-    public void showBag() {
-        for (Tiles tile : bag) {
-            System.out.println(tile.getLetter() + ": " + tile.getScore());
-        }
-    }
-
     public static List<Tiles> getBag() {
         return bag;
     }

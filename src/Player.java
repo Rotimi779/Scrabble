@@ -2,9 +2,9 @@ import java.util.*;
 
 
 public class Player {
-    private int score =0;
-    private List<Tiles> tiles;
-    private Board board;
+    protected int score =0;
+    protected List<Tiles> tiles;
+    protected Board board;
 
     public Player(Board board) {
         tiles = new ArrayList<>();

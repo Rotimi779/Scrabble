@@ -36,8 +36,4 @@ public class WordDictionary {
         return words.contains(word);
     }
 
-    // Get the total number of words in the dictionary
-    public int getWordCount() {
-        return words.size();
-    }
 }
