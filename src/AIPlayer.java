@@ -27,15 +27,12 @@ public class AIPlayer extends Player {
 //                System.out.println("This is the row: "+ i);
                 for (int j = 0; j < 14; j++){
 //                    System.out.println("This is the column: "+ j);
-                    if (board1[i][j] != '-'){
-                        if (str.contains(tileString.append(board1[i][j]))){
-
-                        }
-                        if (canFormWordFromTiles(str, board, i, j, 'H') && Game.isValidPlacement(board, str, 'H', i, j)){
-                            legalMoves.add(new LegalMove(i, j, 'H', str));
-                        }else if (canFormWordFromTiles(str, board, i, j, 'V') && Game.isValidPlacement(board, str, 'V', i, j)){
-                            legalMoves.add(new LegalMove(i, j, 'V', str));
-                        }
+                    if (canFormWordFromTiles(str, board, i, j, 'H') && Game.isValidPlacement(board, str, 'H', i, j)) {
+                        legalMoves.add(new LegalMove(i, j, 'H', str));
+                    }
+                    // Check vertical placement
+                    if (canFormWordFromTiles(str, board, i, j, 'V') && Game.isValidPlacement(board, str, 'V', i, j)) {
+                        legalMoves.add(new LegalMove(i, j, 'V', str));
                     }
 
                 }
@@ -52,32 +49,88 @@ public class AIPlayer extends Player {
         // compute the highest scoring legal word
         int max_score = 0;
         int position = -1;
+        LegalMove bestMove = null;
+
         for (LegalMove move : legalMoves) {
-//            String wrd = move.getWord();
-//            int curr_score = 0;
-//            for (char letter : wrd.toCharArray()) {
-//                curr_score += Game.tilebag.getScore(letter);
-//            }
-            int curr_score = Game.calculateScore(move.getWord(), move.getRow(), move.getCol(), move.getDirection());
-            System.out.println("Curr score: " + curr_score);
-            if (curr_score > max_score) {
-                max_score = curr_score;
-                position = legalMoves.indexOf(move);
+            int currentScore = Game.calculateScore(move.getWord(), move.getRow(), move.getCol(), move.getDirection());
+
+            // Validate that the placement doesn't create invalid words
+            if (isValidPlacementWithIntersections(move, board) &&
+                    isValidPlacementWithLine(move.getRow(), move.getCol(), move.getDirection(), move.getWord(), board) &&
+                    Game.isValidPlacement(board, move.getWord(), move.getDirection(), move.getRow(), move.getCol())) {
+                if (currentScore > max_score) {
+                    max_score = currentScore;
+                    bestMove = move;
+                }
             }
         }
         System.out.println("Max score: " + max_score);
 
-        if (position != -1) {
-            LegalMove move = legalMoves.get(position);
-            System.out.println("Legal move word: " + move.getWord());
-            place(move.getWord(), move.getDirection(), move.getRow(), move.getCol());
-            legalMoves.remove(move);
-        }else{
-            System.out.println("There is no TOMORROW");
+        if (bestMove != null) {
+            place(bestMove.getWord(), bestMove.getDirection(), bestMove.getRow(), bestMove.getCol());
+            updatePlayerScore(bestMove.getWord(), bestMove.getDirection(), bestMove.getRow(), bestMove.getCol());
+            pickTile();
+            System.out.println("AI played: " + bestMove.getWord());
+            return true;
         }
 
+        System.out.println("AI has no valid moves and skips the turn.");
         return false;
     }
+
+    private boolean isValidPlacementWithIntersections(LegalMove move, Board board) {
+        int row = move.getRow();
+        int col = move.getCol();
+        String word = move.getWord();
+        char direction = move.getDirection();
+
+        for (int i = 0; i < word.length(); i++) {
+            char currentLetter = word.charAt(i);
+
+            if (direction == 'H') {
+                // Check if placing this letter creates a valid vertical word
+                String perpendicularWord = Game.newPerpendicularWord(row, col + i, 'V');
+                if (!perpendicularWord.isEmpty() && !Game.wordDictionary.containsWord(perpendicularWord)) {
+                    return false;
+                }
+            } else if (direction == 'V') {
+                // Check if placing this letter creates a valid horizontal word
+                String perpendicularWord = Game.newPerpendicularWord(row + i, col, 'H');
+                if (!perpendicularWord.isEmpty() && !Game.wordDictionary.containsWord(perpendicularWord)) {
+                    return false;
+                }
+            }
+        }
+        return true;
+    }
+
+    private boolean isValidPlacementWithLine(int row, int col, char direction, String word, Board board) {
+        StringBuilder fullLine = new StringBuilder();
+
+        if (direction == 'H') {
+            // Form the entire row
+            int startCol = col;
+            while (startCol > 0 && board.getBoard()[row][startCol - 1] != '-') {
+                startCol--;
+            }
+            for (int i = startCol; i < board.getBoard()[row].length && board.getBoard()[row][i] != '-'; i++) {
+                fullLine.append(board.getBoard()[row][i]);
+            }
+        } else if (direction == 'V') {
+            // Form the entire column
+            int startRow = row;
+            while (startRow > 0 && board.getBoard()[startRow - 1][col] != '-') {
+                startRow--;
+            }
+            for (int i = startRow; i < board.getBoard().length && board.getBoard()[i][col] != '-'; i++) {
+                fullLine.append(board.getBoard()[i][col]);
+            }
+        }
+
+        // Check if the entire line is valid
+        return Game.wordDictionary.containsWord(fullLine.toString());
+    }
+
 
     public void updatePlayerScore(String word, char direction, int row, int column) {
         //for debugging checking to see if called
