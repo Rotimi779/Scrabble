@@ -36,6 +36,17 @@ class GameTest {
 
     @org.junit.jupiter.api.Test
     void calculatePerpendicularScore() {
+        String word = "bat";
+        int score = Game.calculatePerpendicularScore(word);
+
+        // Expected score: B = 3, A = 1, T = 1 -> Total = 5
+        assertEquals(5, score, "Score for 'bat' should be 5 points.");
+
+        word = "quiz";
+        score = Game.calculatePerpendicularScore(word);
+
+        // Expected score: Q = 10, U = 1, I = 1, Z = 10 -> Total = 22
+        assertEquals(22, score, "Score for 'quiz' should be 22 points.");
     }
 
     @org.junit.jupiter.api.Test
