@@ -23,7 +23,8 @@ The game keeps track of every player's score, which is calculated by adding the 
 - **Deliverable 4:** multiple level undo/redo, save/load features and customization of board with alternate premium squares
 
 ## Issues
-### Add issues here
+### AI word placement 
+- When deciding where to place sometimes the AI will place a valid word but with the words around it the word should be invalid
 
 
 ## Future implementation
