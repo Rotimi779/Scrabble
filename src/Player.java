@@ -1,3 +1,4 @@
+import javax.swing.*;
 import java.util.*;
 
 
@@ -5,6 +6,7 @@ public class Player {
     protected int score =0;
     protected List<Tiles> tiles;
     protected Board board;
+    private int blank_space = 0;
 
     public Player(Board board) {
         tiles = new ArrayList<>();
@@ -63,10 +65,31 @@ public class Player {
                 }
             }
 
+
         }
     }
 
     public boolean playTurn(String word, char direction, int row, int col) {
+        if (word.contains(String.valueOf('_'))) {
+            while(word.contains(String.valueOf('_'))){
+                String emptyTile = JOptionPane.showInputDialog("Enter a letter for the empty tile:");
+                StringBuilder sb = new StringBuilder(word);
+                int index = word.indexOf('_');
+                if (index != -1) {
+                    sb.setCharAt(index, emptyTile.charAt(0));
+                }
+                word = sb.toString();
+                blank_space += 1;
+            }
+
+            if (place(word, direction, row, col)){
+                updatePlayerScore(word, direction, row, col);
+                pickTile();
+                return true;
+            }
+        }
+
+
         if (Game.wordDictionary.containsWord(word) && canFormWordFromTiles(word, board, row, col, direction)) {
             if (place(word, direction, row, col)){
                 updatePlayerScore(word, direction, row, col);
@@ -91,6 +114,7 @@ public class Player {
         for (int i = 0; i < word.length(); i++) {
             if (direction == 'H') {
                 if (Game.isValidPlacement(board, word, direction, row, column)) {
+
                     board.getBoard()[row][column + i] = word.charAt(i);
                 } else {
                     System.out.println("Invalid placement");
@@ -117,6 +141,7 @@ public class Player {
             }
             this.addTile(Game.tilebag);
         }
+        //return false;
     }
 
     public int getNumberOfTiles() {

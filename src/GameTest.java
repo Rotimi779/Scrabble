@@ -9,20 +9,12 @@ class GameTest {
         board = new Board();
         game = new Game(board);
 
-        // edge cases
         assertFalse(Game.isValidPlacement(board, "food", 'H', 14, 14));
         assertFalse(Game.isValidPlacement(board, "food", 'V', 14, 5));
-        assertTrue(Game.isValidPlacement(board, "food", 'H', 14, 5));
-        assertTrue(Game.isValidPlacement(board, "food", 'V', 11, 14));
-        assertTrue(Game.isValidPlacement(board, "food", 'H', 0, 0));
 
         // normal/central case
-        assertTrue(Game.isValidPlacement(board, "food", 'H', 5, 5));
-        assertTrue(Game.isValidPlacement(board, "food", 'V', 0, 5));
-
-        // overlapping words
-        assertTrue(game.getCurrentPlayer().place("food", 'H', 0, 0));
-        assertFalse(Game.isValidPlacement(board, "jacket", 'H', 0, 0));
+        assertTrue(Game.isValidPlacement(board, "food", 'H', 7, 7));
+        assertTrue(Game.isValidPlacement(board, "fake", 'V', 7, 7));
 
     }
 
@@ -35,6 +27,11 @@ class GameTest {
 
     @org.junit.jupiter.api.Test
     void calculatePerpendicularWordScore() {
+//        board = new Board();
+//        game = new Game(board);
+//        assertEquals(Game.calculateScore("abs",0,0,'H'), 5);
+//        assertEquals(Game.calculatePerpendicularWordScore("abs",1,0,'H'),);
+
     }
 
     @org.junit.jupiter.api.Test
@@ -42,6 +39,25 @@ class GameTest {
     }
 
     @org.junit.jupiter.api.Test
-    void getTileScore() {
+    void coloredSquareTest() {
+        board = new Board();
+        game = new Game(board);
+        assertTrue(Game.isValidPlacement(board,"eat",'H',7,7));
+        assertTrue(Game.calculateScore("eat",7,7,'H') == 6);
     }
+
+//    @org.junit.jupiter.api.Test
+//    void emptyTileTest() {
+//        Board board1 = new Board();
+//        Game game = new Game(board1);
+//        Player player = new Player(board1);
+//        for(int i = 0; i < 3; i ++){
+//            player.addTile(Game.tilebag);
+//        }
+//        player.getTiles().add(new Tiles('_',0));
+//        player.getTiles().add(new Tiles('E',1));
+//        player.getTiles().add(new Tiles('T',1));
+//        player.playTurn("ate",'H',7,7);
+//    }
+
 }

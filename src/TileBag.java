@@ -71,4 +71,5 @@ public class TileBag {
         return scoreMap.getOrDefault(letter, 0);  // Get score from map, defaulting to 0
     }
 
+
 }

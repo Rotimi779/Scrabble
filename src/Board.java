@@ -161,7 +161,7 @@ public class Board extends JFrame {
         }
     }
 
-    private static boolean isTripleWord(int row, int col) {
+        private static boolean isTripleWord(int row, int col) {
         return (row == col && (row == 0 || row == 14)) || // Diagonal corners
                 (row == 0 || row == 14) && (col == 0 || col == 14) || // Outer corners
                 (row == 7 && (col == 0 || col == 14)) || // Middle row edges
