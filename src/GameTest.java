@@ -46,18 +46,18 @@ class GameTest {
         assertTrue(Game.calculateScore("eat",7,7,'H') == 6);
     }
 
-//    @org.junit.jupiter.api.Test
-//    void emptyTileTest() {
-//        Board board1 = new Board();
-//        Game game = new Game(board1);
-//        Player player = new Player(board1);
-//        for(int i = 0; i < 3; i ++){
-//            player.addTile(Game.tilebag);
-//        }
-//        player.getTiles().add(new Tiles('_',0));
-//        player.getTiles().add(new Tiles('E',1));
-//        player.getTiles().add(new Tiles('T',1));
-//        player.playTurn("ate",'H',7,7);
-//    }
+    @org.junit.jupiter.api.Test
+    void emptyTileTest() {
+        Board board1 = new Board();
+        Game game = new Game(board1);
+        Player player = new Player(board1);
+        for(int i = 0; i < 3; i ++){
+            player.addTile(Game.tilebag);
+        }
+        player.getTiles().add(new Tiles('_',0));
+        player.getTiles().add(new Tiles('E',1));
+        player.getTiles().add(new Tiles('T',1));
+        player.playTurn("_te",'H',7,7);
+    }
 
 }
