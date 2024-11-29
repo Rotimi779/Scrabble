@@ -54,4 +54,31 @@ public class ScrabbleController {
         board.displayRound(game.getRound());
         board.displayCurrentPlayerTiles(game.getCurrentPlayer().displayTiles());
     }
+
+    public void handleRedo(){
+
+    }
+
+    public void handleUndo(){
+
+    }
+
+    public void handleSave(){
+
+    }
+    public void handleLoad(){
+
+    }
+
+    public void handleExit(){
+
+    }
+
+    public void handlePlay(){
+
+    }
+
+    public void handleHelp(){
+
+    }
 }

@@ -85,6 +85,7 @@ public class Player {
             if (place(word, direction, row, col)){
                 updatePlayerScore(word, direction, row, col);
                 pickTile();
+                Game.boardStates.add(board);
                 return true;
             }
         }
@@ -94,6 +95,7 @@ public class Player {
             if (place(word, direction, row, col)){
                 updatePlayerScore(word, direction, row, col);
                 pickTile();
+                Game.boardStates.add(board);
                 return true;
             }
         }

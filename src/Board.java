@@ -13,6 +13,15 @@ public class Board extends JFrame {
     private JPanel topPanel;
     private JPanel bottomPanel;
     private JLabel scoreLabel;
+    private Menu fileMenu;
+    private Menu gameMenu;
+    private MenuBar menuBar;
+    private MenuItem quitItem;
+    private MenuItem helpItem;
+    private MenuItem redoItem;
+    private MenuItem undoItem;
+    private MenuItem saveItem;
+    private MenuItem loadItem;
 
 
     //constructor
@@ -21,6 +30,37 @@ public class Board extends JFrame {
         setTitle("Scrabble");
         setSize(800,600);
         setLayout(new BorderLayout());
+
+        // initialize the menus
+        menuBar = new MenuBar();
+        fileMenu = new Menu("File");
+        gameMenu = new Menu("Game");
+        menuBar.add(fileMenu);
+        menuBar.add(gameMenu);
+        quitItem = new MenuItem("Quit");
+        helpItem = new MenuItem("Help");
+        redoItem = new MenuItem("Redo");
+        undoItem = new MenuItem("Undo");
+        saveItem = new MenuItem("Save");
+        loadItem = new MenuItem("Load");
+
+        // add the menu to menu items to their respective menus
+        // game menu
+        gameMenu.add(redoItem);
+        gameMenu.add(undoItem);
+        gameMenu.add(quitItem);
+        gameMenu.add(helpItem);
+
+        // file menu
+        fileMenu.add(saveItem);
+        fileMenu.add(loadItem);
+
+        this.setMenuBar(menuBar);
+
+
+
+
+
         grid = new JPanel(new GridLayout(15,15));
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
@@ -47,8 +87,19 @@ public class Board extends JFrame {
         tiles = new JLabel();
         bottomPanel.add(tiles);
         add(bottomPanel, BorderLayout.SOUTH);
+        setMenuFunctions();
+
 
         setVisible(true);
+    }
+
+    private void setMenuFunctions(){
+        redoItem.addActionListener(e -> {controller.handleRedo();});
+        undoItem.addActionListener(e -> {controller.handleUndo();});
+        saveItem.addActionListener(e -> {controller.handleSave();});
+        loadItem.addActionListener(e -> {controller.handleLoad();});
+        quitItem.addActionListener(e -> {controller.handleExit();});
+        helpItem.addActionListener(e -> {controller.handleHelp();});
     }
 
     public void displayRound(int round){

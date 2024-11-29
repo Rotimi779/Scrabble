@@ -13,9 +13,9 @@ public class Game {
     public static int round = 1;
 //    public static int firstOrSecond = 1;
     private final Map<String, String> playedList;
+    public static LinkedList<Board> boardStates;
 
     private static Set<String> scoredWords = new HashSet<>();
-    private List<Observer> observers = new ArrayList<>();
 
 
     public Game(Board board) {
@@ -46,19 +46,6 @@ public class Game {
         turn = 1;
         System.out.println("Welcome to the Game of Scrabble");
     }
-
-//    public void addObserver(Observer observer) {
-//        observers.add(observer);
-//    }
-//
-//    private void notifyObservers() {
-//        if (currentPlayer instanceof AIPlayer) {
-//            for (Observer observer : observers) {
-//                observer.update();
-//            }
-//        }
-//
-//    }
 
     public void play(String word, char direction, int row, int col) {
         if (currentPlayer instanceof AIPlayer aiPlayer) {
@@ -92,7 +79,7 @@ public class Game {
         if (currentPlayer instanceof AIPlayer aiPlayer){
             boolean played = false;
             System.out.println("I am AI and I rule!!!!");
-
+            
             aiPlayer.playTurn();
             switchTurn();
 

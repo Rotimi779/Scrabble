@@ -33,7 +33,6 @@ public class AIPlayer extends Player {
                 }
             }
         }
-        //repush
 //        System.out.println(legalMoves.size());
 //        for (LegalMove move : legalMoves) {
 //            System.out.println("Word: " + move.getWord());
@@ -67,6 +66,7 @@ public class AIPlayer extends Player {
             updatePlayerScore(bestMove.getWord(), bestMove.getDirection(), bestMove.getRow(), bestMove.getCol());
             pickTile();
             System.out.println("AI played: " + bestMove.getWord());
+            Game.boardStates.add(board);
             return true;
         }
 
