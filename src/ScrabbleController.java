@@ -3,6 +3,9 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.ObjectOutputStream;
 
 public class ScrabbleController {
     private Game game;
@@ -79,7 +82,12 @@ public class ScrabbleController {
     }
 
     public void handleSave(){
-
+        String filename = JOptionPane.showInputDialog("Type in the name of the file that you want to save the file as");
+        try (ObjectOutputStream out = new ObjectOutputStream(new FileOutputStream(filename + ".ser"))){
+            out.writeObject(game.getGame());
+        } catch (IOException e) {
+            System.err.println("Error during serialization: " + e.getMessage());
+        }
     }
     public void handleLoad(){
 
