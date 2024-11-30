@@ -1,5 +1,6 @@
 import javax.swing.*;
 import java.awt.*;
+import java.util.Arrays;
 
 
 public class Board extends JFrame {
@@ -102,6 +103,7 @@ public class Board extends JFrame {
 
     public void setBoard(Board board){
         this.board = board.getBoard();
+        System.out.println(Arrays.deepToString(board.getBoard()));
         updateBoardDisplay();
     }
 

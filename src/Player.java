@@ -5,13 +5,13 @@ import java.util.*;
 public class Player {
     protected int score =0;
     protected List<Tiles> tiles;
-    protected Board board;
+    protected Game game;
     private int blank_space = 0;
 
-    public Player(Board board) {
+    public Player(Game game) {
         tiles = new ArrayList<>();
         this.score = 0;
-        this.board = board;
+        this.game = game;
     }
 
     public void addTile(TileBag tileBag) {
@@ -31,7 +31,7 @@ public class Player {
         //for debugging checking to see if called
         System.out.println("Updating score for word: " + word);  // Debugging line
 
-        int score = Game.calculateScore(word, row, column, direction); // Main word score
+        int score = game.calculateScore(word, row, column, direction); // Main word score
 
         // Check and add scores for new perpendicular words formed
         for (int i = 0; i < word.length(); i++) {
@@ -39,10 +39,10 @@ public class Player {
 
             if (direction == 'H') {
                 // Check vertically if a new word is created
-                perpendicularScore = Game.calculatePerpendicularWordScore(word, row, column + i, 'V');
+                perpendicularScore = game.calculatePerpendicularWordScore(word, row, column + i, 'V');
             } else if (direction == 'V') {
                 // Check horizontally if a new word is created
-                perpendicularScore = Game.calculatePerpendicularWordScore(word, row + i, column, 'H');
+                perpendicularScore = game.calculatePerpendicularWordScore(word, row + i, column, 'H');
             }
 
             score += perpendicularScore;
@@ -90,7 +90,7 @@ public class Player {
         }
 
 
-        if (Game.wordDictionary.containsWord(word) && canFormWordFromTiles(word, board, row, col, direction)) {
+        if (Game.wordDictionary.containsWord(word) && canFormWordFromTiles(word, game.getBoard(), row, col, direction)) {
             if (place(word, direction, row, col)){
                 updatePlayerScore(word, direction, row, col);
                 pickTile();
@@ -99,11 +99,11 @@ public class Player {
         }
 
         if (!Game.wordDictionary.containsWord(word)){
-            board.displayInvalidWord();
+            game.getBoard().displayInvalidWord();
         }
 
-        if (!canFormWordFromTiles(word, board, row, col, direction)) {
-            board.displayInvalidPlacement();
+        if (!canFormWordFromTiles(word, game.getBoard(), row, col, direction)) {
+            game.getBoard().displayInvalidPlacement();
         }
 
         return false;
@@ -113,16 +113,16 @@ public class Player {
     public boolean place(String word, char direction, int row, int column) {
         for (int i = 0; i < word.length(); i++) {
             if (direction == 'H') {
-                if (Game.isValidPlacement(board, word, direction, row, column)) {
+                if (game.isValidPlacement(game.getBoard(), word, direction, row, column)) {
 
-                    board.getBoard()[row][column + i] = word.charAt(i);
+                    game.getBoard().getBoard()[row][column + i] = word.charAt(i);
                 } else {
                     System.out.println("Invalid placement");
                     return false;
                 }
             } else if (direction == 'V') {
-                if (Game.isValidPlacement(board, word, direction, row, column)) {
-                    board.getBoard()[row + i][column] = word.charAt(i);
+                if (game.isValidPlacement(game.getBoard(), word, direction, row, column)) {
+                    game.getBoard().getBoard()[row + i][column] = word.charAt(i);
                 } else {
                     System.out.println("Invalid placement");
                     return false;

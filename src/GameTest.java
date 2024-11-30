@@ -9,12 +9,12 @@ class GameTest {
         board = new Board();
         game = new Game(board);
 
-        assertFalse(Game.isValidPlacement(board, "food", 'H', 14, 14));
-        assertFalse(Game.isValidPlacement(board, "food", 'V', 14, 5));
+        assertFalse(game.isValidPlacement(board, "food", 'H', 14, 14));
+        assertFalse(game.isValidPlacement(board, "food", 'V', 14, 5));
 
         // normal/central case
-        assertTrue(Game.isValidPlacement(board, "food", 'H', 7, 7));
-        assertTrue(Game.isValidPlacement(board, "fake", 'V', 7, 7));
+        assertTrue(game.isValidPlacement(board, "food", 'H', 7, 7));
+        assertTrue(game.isValidPlacement(board, "fake", 'V', 7, 7));
 
     }
 
@@ -22,7 +22,7 @@ class GameTest {
     void calculateScore() {
         board = new Board(); 
         game = new Game(board);
-        assertTrue(Game.calculateScore("sit", 0, 0, 'H') == 3);
+        assertTrue(game.calculateScore("sit", 0, 0, 'H') == 3);
     }
 
     @org.junit.jupiter.api.Test
@@ -37,13 +37,13 @@ class GameTest {
     @org.junit.jupiter.api.Test
     void calculatePerpendicularScore() {
         String word = "bat";
-        int score = Game.calculatePerpendicularScore(word);
+        int score = game.calculatePerpendicularScore(word);
 
         // Expected score: B = 3, A = 1, T = 1 -> Total = 5
         assertEquals(5, score, "Score for 'bat' should be 5 points.");
 
         word = "quiz";
-        score = Game.calculatePerpendicularScore(word);
+        score = game.calculatePerpendicularScore(word);
 
         // Expected score: Q = 10, U = 1, I = 1, Z = 10 -> Total = 22
         assertEquals(22, score, "Score for 'quiz' should be 22 points.");
@@ -53,15 +53,15 @@ class GameTest {
     void coloredSquareTest() {
         board = new Board();
         game = new Game(board);
-        assertTrue(Game.isValidPlacement(board,"eat",'H',7,7));
-        assertTrue(Game.calculateScore("eat",7,7,'H') == 6);
+        assertTrue(game.isValidPlacement(board,"eat",'H',7,7));
+        assertTrue(game.calculateScore("eat",7,7,'H') == 6);
     }
 
     @org.junit.jupiter.api.Test
     void emptyTileTest() {
         Board board1 = new Board();
         Game game = new Game(board1);
-        Player player = new Player(board1);
+        Player player = new Player(game);
         for(int i = 0; i < 3; i ++){
             player.addTile(Game.tilebag);
         }

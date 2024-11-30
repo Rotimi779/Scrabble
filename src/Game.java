@@ -23,9 +23,9 @@ public class Game {
         tilebag = new TileBag();
         wordDictionary = new WordDictionary("https://www.mit.edu/~ecprice/wordlist.10000");
         this.players = new ArrayList<>();
-        Player player1 = new Player(board);
-        Player player2 = new Player(board);
-        AIPlayer aiPlayer = new AIPlayer(board);
+        Player player1 = new Player(this);
+        Player player2 = new Player(this);
+        AIPlayer aiPlayer = new AIPlayer(this);
         currentPlayer = player1;
         playedList = new HashMap<>();
         this.board = board;
@@ -54,11 +54,17 @@ public class Game {
         return turn;
     }
 
+    public Board getBoard(){
+        return board;
+    }
+
     public void setGame(Game game){
         this.players = game.players;
         this.currentPlayer = game.currentPlayer;
         this.turn = game.turn;
+        System.out.println(game.turn);
         this.round = game.round;
+        System.out.println(game.round);
     }
 
     public void play(String word, char direction, int row, int col) {
