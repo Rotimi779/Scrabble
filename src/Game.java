@@ -59,13 +59,15 @@ public class Game implements Serializable {
         return board;
     }
 
-    public void setGame(Game game){
-        this.players = game.players;
-        this.currentPlayer = game.currentPlayer;
-        this.turn = game.turn;
-        System.out.println(game.turn);
-        this.round = game.round;
-        System.out.println(game.round);
+    public void setGame(GameState state){
+        int i = 0;
+        for (Player player : players){
+            player.score = state.getScores()[i];
+            i++;
+        }
+        this.turn = state.getTurn();
+        this.currentPlayer = this.players.get(turn - 1);
+        this.round = state.getRound();
     }
 
     public void play(String word, char direction, int row, int col) {
@@ -102,6 +104,7 @@ public class Game implements Serializable {
             System.out.println("I am AI and I rule!!!!");
             
             aiPlayer.playTurn();
+            gameStates.add(new GameState(board, this));
             switchTurn();
 
         }

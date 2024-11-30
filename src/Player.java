@@ -3,7 +3,7 @@ import java.util.*;
 
 
 public class Player {
-    protected int score =0;
+    protected int score = 0;
     protected List<Tiles> tiles;
     protected Game game;
     private int blank_space = 0;

@@ -101,9 +101,14 @@ public class Board extends JFrame {
         helpItem.addActionListener(e -> {controller.handleHelp();});
     }
 
-    public void setBoard(Board board){
-        this.board = board.getBoard();
-        System.out.println(Arrays.deepToString(board.getBoard()));
+    public void setBoard(char[][] board){
+        this.board = board;
+        for(int i = 0; i < 15; i++){
+            for(int j = 0; j < 15; j++){
+                System.out.print(board[i][j] + " ");
+            }
+            System.out.println();
+        }
         updateBoardDisplay();
     }
 

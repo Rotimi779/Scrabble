@@ -1,15 +1,47 @@
+import java.util.Arrays;
+
+import static java.util.Arrays.copyOf;
+
 public class GameState {
-    private Board board;
+    private char[][] board;
     private Game game;
+    private int turn;
+    private int round;
+    private int[] scores;
+
 
     public GameState(Board board, Game game) {
-        this.board = board;
-        this.game = game;
+        scores = new int[game.players.size()];
+        this.turn = game.getTurn();
+        this.round = game.getRound();
+        this.board = new char[15][];
+        for (int i = 0; i < 15; i++){
+            this.board[i] = Arrays.copyOf(board.getBoard()[i], board.getBoard()[i].length);
+            System.out.println(Arrays.toString(this.board[i]));
+        }
+        this.board = board.getBoard();
+        int i = 0;
+        for(Player player : game.players){
+            scores[i] = player.score;
+        }
     }
-    public Board getBoard() {
+
+    public int[] getScores() {
+        return scores;
+    }
+
+    public int getTurn() {
+        return turn;
+    }
+
+    public int getRound() {
+        return round;
+    }
+
+    public int turn(){
+        return turn;
+    }
+    public char[][] getBoard() {
         return board;
-    }
-    public Game getGame() {
-        return game;
     }
 }

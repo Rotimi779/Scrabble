@@ -65,7 +65,7 @@ public class ScrabbleController {
             int index = game.round - 1;
             GameState state = game.getStates().get(index + 1);
             board.setBoard(state.getBoard());
-            game.setGame(state.getGame());
+            game.setGame(state);
             System.out.println("The move has been redone");
             board.updateBoardDisplay();
             board.displayCurrentPlayerTiles(game.getCurrentPlayer().displayTiles(game.getTurn()));
@@ -75,15 +75,16 @@ public class ScrabbleController {
 
     public void handleUndo(){
         if (game.round != 0){
-            int index = game.round - 1;
+            int index = game.round - 2;
             GameState state = game.getStates().get(index - 1);
+
             for (GameState st : game.getStates()) {
-                System.out.println(st.getGame().getTurn() + " " + st.getGame().getRound());
+                System.out.println(st.getTurn() + " " + st.getRound());
             }
             board.setBoard(state.getBoard());
-            game.setGame(state.getGame());
+            game.setGame(state);
             System.out.println("The move has been undone");
-            board.updateBoardDisplay();
+//            board.updateBoardDisplay();
             board.displayCurrentPlayerTiles(game.getCurrentPlayer().displayTiles(game.getTurn()));
             board.displayRound(game.getRound());
         }
