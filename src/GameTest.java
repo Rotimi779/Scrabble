@@ -6,6 +6,7 @@ class GameTest {
 
     @org.junit.jupiter.api.Test
     void isValidPlacement() {
+        // commit
         board = new Board();
         game = new Game(board);
 
