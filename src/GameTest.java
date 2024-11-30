@@ -66,9 +66,10 @@ class GameTest {
             player.addTile(Game.tilebag);
         }
         player.getTiles().add(new Tiles('_',0));
-        player.getTiles().add(new Tiles('E',1));
+        player.getTiles().add(new Tiles('A',1));
         player.getTiles().add(new Tiles('T',1));
-        player.playTurn("_te",'H',7,7);
+        //Type in the letter b or c
+        player.playTurn("_at",'H',7,7);
     }
 
 }

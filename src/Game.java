@@ -1,9 +1,10 @@
 import javax.swing.*;
 import java.awt.*;
+import java.io.Serializable;
 import java.util.*;
 import java.util.List;
 
-public class Game {
+public class Game implements Serializable {
     public static TileBag tilebag;
     public static WordDictionary wordDictionary;
     private Board board;
@@ -436,5 +437,8 @@ public class Game {
 
         return score;
     }
+
+    //Get the game to serialize
+    public Game getGame(){ return this;}
 
 }
