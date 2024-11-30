@@ -18,9 +18,9 @@ public class Player {
         tiles.add(tileBag.drawTile());
     }
 
-    public String displayTiles() {
+    public String displayTiles(int turn) {
         StringBuilder str = new StringBuilder("Player");
-        str.append(Game.turn).append("'s tiles:");
+        str.append(turn).append("'s tiles:");
         for (Tiles tile : tiles) {
             str.append("\t").append("Tile: ").append(tile.getLetter()).append("(").append(tile.getScore()).append(") ");
         }
@@ -85,7 +85,6 @@ public class Player {
             if (place(word, direction, row, col)){
                 updatePlayerScore(word, direction, row, col);
                 pickTile();
-                Game.boardStates.add(board);
                 return true;
             }
         }
@@ -95,7 +94,6 @@ public class Player {
             if (place(word, direction, row, col)){
                 updatePlayerScore(word, direction, row, col);
                 pickTile();
-                Game.boardStates.add(board);
                 return true;
             }
         }

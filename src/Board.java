@@ -48,18 +48,16 @@ public class Board extends JFrame {
         // game menu
         gameMenu.add(redoItem);
         gameMenu.add(undoItem);
-        gameMenu.add(quitItem);
+
         gameMenu.add(helpItem);
 
         // file menu
         fileMenu.add(saveItem);
         fileMenu.add(loadItem);
+        fileMenu.add(quitItem);
 
+        // set the menu bar
         this.setMenuBar(menuBar);
-
-
-
-
 
         grid = new JPanel(new GridLayout(15,15));
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -100,6 +98,11 @@ public class Board extends JFrame {
         loadItem.addActionListener(e -> {controller.handleLoad();});
         quitItem.addActionListener(e -> {controller.handleExit();});
         helpItem.addActionListener(e -> {controller.handleHelp();});
+    }
+
+    public void setBoard(Board board){
+        this.board = board.getBoard();
+        updateBoardDisplay();
     }
 
     public void displayRound(int round){
@@ -152,6 +155,11 @@ public class Board extends JFrame {
         JOptionPane.showMessageDialog(this, "Invalid direction.");
     }
 
+    public boolean displayDisplayQuitConfirmation(){ // we could change this to an option one instead
+        String answer = JOptionPane.showInputDialog(this, "Are you sure you want to quit?");
+        return answer.equalsIgnoreCase("yes") || answer.equalsIgnoreCase("y");
+    }
+
     public void updateBoardDisplay() {
         for (int i = 0; i < buttons.length; i++) {
             for (int j = 0; j < buttons[i].length; j++) {
@@ -177,8 +185,8 @@ public class Board extends JFrame {
         }
     }
 
-    public void updateScoreLabel(int score) {
-        scoreLabel.setText("Player " + Game.turn + "'s turn. " + "Player " + Game.turn  +"'s Score: " + score);
+    public void updateScoreLabel(int score, int turn) {
+        scoreLabel.setText("Player " + turn + "'s turn. " + "Player " + turn  +"'s Score: " + score);
         scoreLabel.revalidate();
         scoreLabel.repaint();
     }

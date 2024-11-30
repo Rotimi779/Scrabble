@@ -14,6 +14,7 @@ public class AIPlayer extends Player {
         for (Tiles tile : tiles) {
             tileString.append(tile.getLetter());
         }
+        System.out.println("The AI has " + tileString);
         List<LegalMove> legalMoves = new ArrayList<LegalMove>();
 
         // get a subset of legal moves
@@ -66,7 +67,6 @@ public class AIPlayer extends Player {
             updatePlayerScore(bestMove.getWord(), bestMove.getDirection(), bestMove.getRow(), bestMove.getCol());
             pickTile();
             System.out.println("AI played: " + bestMove.getWord());
-            Game.boardStates.add(board);
             return true;
         }
 
@@ -136,8 +136,8 @@ public class AIPlayer extends Player {
         return super.place(word, direction, row, column);
     }
 
-    public String displayTiles() {
-        return super.displayTiles();
+    public String displayTiles(int turn) {
+        return super.displayTiles(turn);
     }
 
     public void addTile(TileBag tileBag) {

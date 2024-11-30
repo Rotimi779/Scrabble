@@ -12,8 +12,9 @@ public class ScrabbleController {
         this.game = game;
         this.board = board;
         board.setController(this);
+        game.getStates().add(new GameState(board, game));
         board.displayRound(game.getRound());
-        board.displayCurrentPlayerTiles(game.getCurrentPlayer().displayTiles());
+        board.displayCurrentPlayerTiles(game.getCurrentPlayer().displayTiles(game.getTurn()));
     }
 
     public void handleButtonClick(int row, int col) {
@@ -25,11 +26,12 @@ public class ScrabbleController {
 
             if (!game.getCurrentPlayer().canFormWordFromTiles(playEvent.getWord(), board, row, col, dirChar)) {
                 board.displayInvalidWord();
-            } else if (!Game.isValidPlacement(board, playEvent.getWord(), dirChar, row, col)) {
+            } else if (!game.isValidPlacement(board, playEvent.getWord(), dirChar, row, col)) {
                 board.displayInvalidPlacement();
             }else {
                 if (!(game.getCurrentPlayer() instanceof AIPlayer)){
                     game.play(playEvent.getWord(), dirChar, row, col);
+                    game.getStates().add(new GameState(board, game));
                     board.updateBoardDisplay();
 
                     // Update player score
@@ -38,7 +40,7 @@ public class ScrabbleController {
 
                     // Update score display on GUI
                     int playerScore = game.getCurrentPlayer().getPlayerScore();
-                    board.updateScoreLabel(playerScore);
+                    board.updateScoreLabel(playerScore, game.getTurn());
                     //System.out.println("Player's current score: " + playerScore);
                 }
             }
@@ -52,14 +54,27 @@ public class ScrabbleController {
         }
 
         board.displayRound(game.getRound());
-        board.displayCurrentPlayerTiles(game.getCurrentPlayer().displayTiles());
+        board.displayCurrentPlayerTiles(game.getCurrentPlayer().displayTiles(game.getTurn()));
     }
 
     public void handleRedo(){
-
+        if (game.round != game.getStates().size()){
+            int index = game.round - 1;
+            GameState state = game.getStates().get(index + 1);
+            board.setBoard(state.getBoard());
+            game.setGame(state.getGame());
+            System.out.println("The move has been redone");
+        }
     }
 
     public void handleUndo(){
+        if (game.round != 0){
+            int index = game.round - 1;
+            GameState state = game.getStates().get(index - 1);
+            board.setBoard(state.getBoard());
+            game.setGame(state.getGame());
+            System.out.println("The move has been undone");
+        }
 
     }
 
@@ -71,6 +86,9 @@ public class ScrabbleController {
     }
 
     public void handleExit(){
+        if (board.displayDisplayQuitConfirmation()){
+            System.exit(0);
+        }
 
     }
 

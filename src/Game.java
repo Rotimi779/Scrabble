@@ -6,14 +6,14 @@ import java.util.List;
 public class Game {
     public static TileBag tilebag;
     public static WordDictionary wordDictionary;
-    public static Board board;
-    public static int turn;
+    private Board board;
+    private int turn;
     public ArrayList<Player> players;
-    private static Player currentPlayer;
-    public static int round = 1;
+    private Player currentPlayer;
+    public int round = 1;
 //    public static int firstOrSecond = 1;
     private final Map<String, String> playedList;
-    public static LinkedList<Board> boardStates;
+    private LinkedList<GameState> gameStates;
 
     private static Set<String> scoredWords = new HashSet<>();
 
@@ -28,8 +28,8 @@ public class Game {
         AIPlayer aiPlayer = new AIPlayer(board);
         currentPlayer = player1;
         playedList = new HashMap<>();
-        Game.board = board;
-
+        this.board = board;
+        gameStates = new LinkedList<GameState>();
 
         // Give the players their tiles
         for (int i = 0; i < 7; i ++){
@@ -45,6 +45,20 @@ public class Game {
         // Initialize the board and start the game
         turn = 1;
         System.out.println("Welcome to the Game of Scrabble");
+    }
+
+    public LinkedList<GameState> getStates(){
+        return gameStates;
+    }
+    public int getTurn(){
+        return turn;
+    }
+
+    public void setGame(Game game){
+        this.players = game.players;
+        this.currentPlayer = game.currentPlayer;
+        this.turn = game.turn;
+        this.round = game.round;
     }
 
     public void play(String word, char direction, int row, int col) {
@@ -95,11 +109,11 @@ public class Game {
 //        }
     }
 
-    public static int getRound(){
+    public int getRound(){
         return round;
     }
 
-    public static boolean isValidPlacement(Board board, String word, char direction, int row, int column) {
+    public boolean isValidPlacement(Board board, String word, char direction, int row, int column) {
         // Check for out-of-bounds conditions
         int round = getRound();
         if (direction == 'H' && (column + word.length()) > 15) {
@@ -180,7 +194,7 @@ public class Game {
 
 
     // checking for new word created, only for perpendicular will add parallel later
-    public static String newPerpendicularWord(int row, int column, char direction){
+    public String newPerpendicularWord(int row, int column, char direction){
         StringBuilder newWord = new StringBuilder();
 
         int startRow = row, startCol = column;
@@ -219,7 +233,7 @@ public class Game {
         return currentPlayer;
     }
 
-    public static int calculateScore(String word, int row, int column, char direction) {
+    public int calculateScore(String word, int row, int column, char direction) {
         int score = 0;
 
         for (int i = 0; i < word.length(); i++) {
@@ -231,7 +245,7 @@ public class Game {
             Color buttonColor = button.getBackground();
 
             // Get the tile score and apply letter multipliers
-            int tileScore = getTileScore(currentPlayer, word.charAt(i));
+            int tileScore = getTileScore(this.currentPlayer, word.charAt(i));
             if (tileScore == -1) continue; // Skip if no matching tile is found
 
             tileScore = applyLetterMultiplier(tileScore, buttonColor);
@@ -312,7 +326,7 @@ public class Game {
 //            }
 //        }
 
-    public static int calculatePerpendicularWordScore(String word, int row, int column, char direction) {
+    public int calculatePerpendicularWordScore(String word, int row, int column, char direction) {
         int totalPerpendicularScore = 0;
 
         // Only in round 1, mark the first word as placed in the set
@@ -336,13 +350,13 @@ public class Game {
             }
 
             // **Boundary Check**
-            if (startRow < 0 || startRow >= Game.board.getBoard().length ||
-                    startCol < 0 || startCol >= Game.board.getBoard()[0].length) {
+            if (startRow < 0 || startRow >= board.getBoard().length ||
+                    startCol < 0 || startCol >= board.getBoard()[0].length) {
                 continue; // Skip processing if out of bounds
             }
 
             // Form the new perpendicular word if the board spot is empty
-            if (Game.board.getBoard()[startRow][startCol] == '-') {
+            if (board.getBoard()[startRow][startCol] == '-') {
                 String perpendicularWord = newPerpendicularWord(startRow, startCol, direction == 'H' ? 'V' : 'H');
 
                 // Check if this is a valid perpendicular word
@@ -371,7 +385,7 @@ public class Game {
     }
 
 
-    public static int calculatePerpendicularScore(String perpendicularWord) {
+    public int calculatePerpendicularScore(String perpendicularWord) {
         int score = 0;
 
         // Tile score mapping (letter -> score), typically based on Scrabble tile values.
