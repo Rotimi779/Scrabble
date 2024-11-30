@@ -77,6 +77,15 @@ public class ScrabbleController {
         if (game.round != 0){
             int index = game.round - 2;
             GameState state = game.getStates().get(index - 1);
+            for(GameState str : game.getStates()){
+                for (int i = 0; i < str.getBoard()[0].length; i++) {
+                    for (int j = 0; j < str.getBoard()[0].length; j++) {
+                        System.out.print(str.getBoard()[i][j] + " ");
+                    }
+                    System.out.println();
+                }
+                System.out.println();
+            }
 
             for (GameState st : game.getStates()) {
                 System.out.println(st.getTurn() + " " + st.getRound());
