@@ -98,22 +98,25 @@ public class ScrabbleController implements Serializable {
 
     }
 
-    public void handleSave(){
+    public boolean handleSave(){
         String gameName = JOptionPane.showInputDialog("Type in the name of the file that you want to save the game as");
         String boardName = JOptionPane.showInputDialog("Type in the name of the file that you want to save the board as");
         try (ObjectOutputStream out = new ObjectOutputStream(new FileOutputStream(gameName + ".ser"))){
             out.writeObject(game.getGame());
         } catch (IOException e) {
             System.err.println("Error during game serialization: " + e.getMessage());
+            return false;
         }
         try (ObjectOutputStream boardOut = new ObjectOutputStream(new FileOutputStream(boardName + ".ser"))){
             boardOut.writeObject(this.board);
         } catch (IOException e) {
             System.err.println("Error during board serialization: " + e.getMessage());
+            return false;
         }
+        return true;
 
     }
-    public void handleLoad(){
+    public boolean handleLoad(){
         String gameName = JOptionPane.showInputDialog("Type in the name of the game file that you want to reload from");
         String boardName = JOptionPane.showInputDialog("Type in the name of the board file that you want to reload from");
 
@@ -123,6 +126,7 @@ public class ScrabbleController implements Serializable {
             System.out.println("Game has been read");
         } catch (IOException | ClassNotFoundException e) {
             System.err.println("Error during game deserialization: " + e.getMessage());
+            return false;
         }
 
         System.out.println("This is the board before loading" + board);
@@ -138,6 +142,7 @@ public class ScrabbleController implements Serializable {
 
         } catch (IOException | ClassNotFoundException e) {
             System.err.println("Error during board deserialization: " + e.getMessage());
+            return false;
         }
 
         char [][] b = this.board.getBoard();
@@ -153,6 +158,7 @@ public class ScrabbleController implements Serializable {
         board.updateScoreLabel(game.getCurrentPlayer().getPlayerScore(), game.getTurn());
         board.displayCurrentPlayerTiles(game.getCurrentPlayer().displayTiles(game.getTurn()));
         board.displayRound(game.getRound());
+        return true;
 
     }
 
