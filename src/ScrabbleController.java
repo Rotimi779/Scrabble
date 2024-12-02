@@ -116,6 +116,7 @@ public class ScrabbleController implements Serializable {
     public void handleLoad(){
         String gameName = JOptionPane.showInputDialog("Type in the name of the game file that you want to reload from");
         String boardName = JOptionPane.showInputDialog("Type in the name of the board file that you want to reload from");
+
         try (ObjectInputStream in = new ObjectInputStream(new FileInputStream(gameName + ".ser"))) {
             System.out.println("Game about to be read");
             this.game = (Game)in.readObject();
@@ -124,23 +125,32 @@ public class ScrabbleController implements Serializable {
             System.err.println("Error during game deserialization: " + e.getMessage());
         }
 
-
+        System.out.println("This is the board before loading" + board);
         try (ObjectInputStream boardOut = new ObjectInputStream(new FileInputStream(boardName + ".ser"))) {
-            this.board = (Board)boardOut.readObject();
+            Board b = (Board)boardOut.readObject();
+            for (int i = 0; i < 15; i++) {
+                for (int j = 0; j < 15; j++) {
+                    this.board.getBoard()[i][j] = b.getBoard()[i][j];
+                    System.out.println(board.getBoard()[i][j]);
+                }
+                System.out.println(" ");
+            }
 
         } catch (IOException | ClassNotFoundException e) {
             System.err.println("Error during board deserialization: " + e.getMessage());
         }
-        board.updateBoardDisplay();
-        char [][] b = board.getBoard();
+
+        char [][] b = this.board.getBoard();
         for (int i = 0; i < 15; i++) {
             for (int j = 0; j < 15; j++) {
                 System.out.print(b[i][j]);
             }
             System.out.println(" ");
         }
-        game.setBoard(board);
-
+//        game.setBoard(board);
+        this.board.updateBoardDisplay();
+        System.out.println("This is the board after loading" + b);
+        board.updateScoreLabel(game.getCurrentPlayer().getPlayerScore(), game.getTurn());
         board.displayCurrentPlayerTiles(game.getCurrentPlayer().displayTiles(game.getTurn()));
         board.displayRound(game.getRound());
 
