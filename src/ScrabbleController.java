@@ -3,11 +3,9 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.ObjectOutputStream;
+import java.io.*;
 
-public class ScrabbleController {
+public class ScrabbleController implements Serializable {
     private Game game;
     private Board board;
 
@@ -101,14 +99,50 @@ public class ScrabbleController {
     }
 
     public void handleSave(){
-        String filename = JOptionPane.showInputDialog("Type in the name of the file that you want to save the file as");
-        try (ObjectOutputStream out = new ObjectOutputStream(new FileOutputStream(filename + ".ser"))){
+        String gameName = JOptionPane.showInputDialog("Type in the name of the file that you want to save the game as");
+        String boardName = JOptionPane.showInputDialog("Type in the name of the file that you want to save the board as");
+        try (ObjectOutputStream out = new ObjectOutputStream(new FileOutputStream(gameName + ".ser"))){
             out.writeObject(game.getGame());
         } catch (IOException e) {
-            System.err.println("Error during serialization: " + e.getMessage());
+            System.err.println("Error during game serialization: " + e.getMessage());
         }
+        try (ObjectOutputStream boardOut = new ObjectOutputStream(new FileOutputStream(boardName + ".ser"))){
+            boardOut.writeObject(this.board);
+        } catch (IOException e) {
+            System.err.println("Error during board serialization: " + e.getMessage());
+        }
+
     }
     public void handleLoad(){
+        String gameName = JOptionPane.showInputDialog("Type in the name of the game file that you want to reload from");
+        String boardName = JOptionPane.showInputDialog("Type in the name of the board file that you want to reload from");
+        try (ObjectInputStream in = new ObjectInputStream(new FileInputStream(gameName + ".ser"))) {
+            System.out.println("Game about to be read");
+            this.game = (Game)in.readObject();
+            System.out.println("Game has been read");
+        } catch (IOException | ClassNotFoundException e) {
+            System.err.println("Error during game deserialization: " + e.getMessage());
+        }
+
+
+        try (ObjectInputStream boardOut = new ObjectInputStream(new FileInputStream(boardName + ".ser"))) {
+            this.board = (Board)boardOut.readObject();
+
+        } catch (IOException | ClassNotFoundException e) {
+            System.err.println("Error during board deserialization: " + e.getMessage());
+        }
+        board.updateBoardDisplay();
+        char [][] b = board.getBoard();
+        for (int i = 0; i < 15; i++) {
+            for (int j = 0; j < 15; j++) {
+                System.out.print(b[i][j]);
+            }
+            System.out.println(" ");
+        }
+        game.setBoard(board);
+
+        board.displayCurrentPlayerTiles(game.getCurrentPlayer().displayTiles(game.getTurn()));
+        board.displayRound(game.getRound());
 
     }
 

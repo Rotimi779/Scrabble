@@ -444,4 +444,7 @@ public class Game implements Serializable {
     //Get the game to serialize
     public Game getGame(){ return this;}
 
+    //Set the board
+    public void setBoard(Board b){this.board = b;}
+
 }

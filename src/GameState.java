@@ -1,8 +1,9 @@
+import java.io.Serializable;
 import java.util.Arrays;
 
 import static java.util.Arrays.copyOf;
 
-public class GameState {
+public class GameState implements Serializable {
     private char[][] board;
     private Game game;
     private int turn;
