@@ -1,3 +1,5 @@
+import org.junit.jupiter.api.Test;
+
 import static org.junit.jupiter.api.Assertions.*;
 
 class GameTest {
@@ -71,6 +73,62 @@ class GameTest {
         player.getTiles().add(new Tiles('T',1));
         //Type in the letter b or c
         player.playTurn("_at",'H',7,7);
+    }
+
+    @Test
+    void undoTest(){
+        board = new Board();
+        game = new Game(board);
+        ScrabbleController controller = new ScrabbleController(game, board);
+        board.setController(controller);
+        game.getStates().add(new GameState(board, game));
+        game.getCurrentPlayer().place("sit", 'H', 7, 7);
+        game.getCurrentPlayer().updatePlayerScore("sit", 'H', 7, 7);
+        game.switchTurn();
+
+        controller.handleUndo();
+        int count = 0;
+        for (int i = 0; i < 15; i++) {
+            for (int j = 0; j < 15; j++) {
+                System.out.print(board.getBoard()[i][j]);
+                if (board.getBoard()[i][j] != '-'){
+                    count++;
+                }
+            }
+            System.out.println();
+        }
+
+        assertEquals(game.players.getFirst().score, 0);
+        assertEquals(count, 0);
+
+    }
+
+    @Test
+    void redoTest(){
+        board = new Board();
+        game = new Game(board);
+        ScrabbleController controller = new ScrabbleController(game, board);
+        board.setController(controller);
+        game.getStates().add(new GameState(board, game));
+        game.getCurrentPlayer().place("sit", 'H', 7, 7);
+        game.getCurrentPlayer().updatePlayerScore("sit", 'H', 7, 7);
+        game.switchTurn();
+        controller.handleUndo();
+        controller.handleRedo();
+        int count = 0;
+        for (int i = 0; i < 15; i++) {
+            for (int j = 0; j < 15; j++) {
+                System.out.print(board.getBoard()[i][j]);
+                if (board.getBoard()[i][j] != '-'){
+                    count++;
+                }
+            }
+            System.out.println();
+        }
+
+        assertEquals(game.players.getFirst().score, 2);
+        assertEquals(count, 3);
+
     }
 
 }

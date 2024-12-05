@@ -87,18 +87,10 @@ public class ScrabbleController implements Serializable {
     }
 
     public void handleUndo(){
-        if (game.round != 0){
+        if (game.round != 1){
             // to retrieve the previous game state
-            int index = game.round - 2;
             GameState state = game.getStates().pop();
             previousGameState = new GameState(board, game);
-//            GameState state = null;
-//            for (GameState str : game.getStates()) {
-//                if (str.getTurn() == game.getTurn()) {
-//                    state = str;
-//                }
-//            }
-//             GameState state = game.getStates().get(index - 1);
 
             // for testing
 //            System.out.println("These are now the previous states");
@@ -127,7 +119,6 @@ public class ScrabbleController implements Serializable {
             }
 
             System.out.println("The move has been undone");
-//            board.updateBoardDisplay();
 
             // update the displays
             board.displayCurrentPlayerTiles(game.getCurrentPlayer().displayTiles(game.getTurn()));

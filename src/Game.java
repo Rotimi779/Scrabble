@@ -67,6 +67,7 @@ public class Game implements Serializable {
             int j = 0;
             for (char c : state.getTiles().get(i)) {
                 if (player.tiles.get(j).getLetter() != c) {
+                    player.tiles.remove(j);
                     player.tiles.add(j, new Tiles(c, tilebag.getScore(c))); // set the players tiles to that
                     tilebag.addTile(c, tilebag.getScore(c)); // add the tiles back to the bag
                 }
@@ -107,10 +108,10 @@ public class Game implements Serializable {
     public void switchTurn() {
 //        gameStates.add(new GameState(board, this));
         round++;
-        if (players.size() % round == 0) {
+        if ( round % players.size() == 0) {
             turn = players.size();
         } else {
-            turn = (players.size() % round);
+            turn = (round % players.size());
         }
 
         currentPlayer = players.get((round - 1) % players.size());
