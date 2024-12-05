@@ -16,7 +16,7 @@ public class Game implements Serializable {
     private final Map<String, String> playedList;
     private Stack<GameState> gameStates;
 
-    private static Set<String> scoredWords = new HashSet<>();
+    public static Set<String> scoredWords = new HashSet<>();
 
 
     public Game(Board board) {
@@ -141,20 +141,24 @@ public class Game implements Serializable {
     }
 
     public boolean isValidPlacement(Board board, String word, char direction, int row, int column) {
+        int round = getRound(); // Get the current round number
+
         // Check for out-of-bounds conditions
-        int round = getRound();
         if (direction == 'H' && (column + word.length()) > 15) {
+            System.out.println("Out of bounds horizontally");
             return false;
         } else if (direction == 'V' && (row + word.length()) > 15) {
+            System.out.println("Out of bounds vertically");
             return false;
         }
 
         boolean hasAdjacent = false;
+        boolean allPerpendicularWordsValid = false;// Tracks if the word is adjacent to other tiles
 
         for (int i = 0; i < word.length(); i++) {
             char characterOnBoard;
 
-            // Set the character on the board depending on direction
+            // Determine the character on the board based on direction
             if (direction == 'H') {
                 characterOnBoard = board.getBoard()[row][column + i];
             } else if (direction == 'V') {
@@ -163,23 +167,23 @@ public class Game implements Serializable {
                 return false; // Invalid direction
             }
 
-            // Check if the tile on the board is either empty ('-') or matches the letter in the word
+            // Check if the tile is empty ('-') or matches the letter in the word
             if (characterOnBoard != '-') {
                 if (characterOnBoard != word.charAt(i)) {
-                    return false; // The board letter doesn't match the word letter
+                    return false; // Tile conflict: existing letter doesn't match
                 }
             }
 
-            // Check for adjacent tiles if `round > 1`
+            // Check for adjacent tiles if not the first round
             if (round > 1) {
                 if (direction == 'H') {
-                    // Check above and below the current tile for adjacency
+                    // Check above and below for adjacency
                     if ((row > 0 && board.getBoard()[row - 1][column + i] != '-') ||
                             (row < 14 && board.getBoard()[row + 1][column + i] != '-')) {
                         hasAdjacent = true;
                     }
                 } else if (direction == 'V') {
-                    // Check left and right of the current tile for adjacency
+                    // Check left and right for adjacency
                     if ((column > 0 && board.getBoard()[row + i][column - 1] != '-') ||
                             (column < 14 && board.getBoard()[row + i][column + 1] != '-')) {
                         hasAdjacent = true;
@@ -190,7 +194,25 @@ public class Game implements Serializable {
 
             // Validate perpendicular word creation
             String perpendicularWord = newPerpendicularWord(row + (direction == 'V' ? i : 0), column + (direction == 'H' ? i : 0), direction);
-            if (perpendicularWord.length() > 1 && !isValidWord(perpendicularWord)) {
+
+            if (perpendicularWord.length() > 1 && isValidWord(perpendicularWord) && ( round == 1 || hasAdjacent)) {
+                System.out.println("Perpendicular word is valid and longer than one letter, pass");
+                System.out.printf("Perpendicular word that was built and verified: %s%n", perpendicularWord);
+                // Perpendicular word exists and is valid
+                allPerpendicularWordsValid = true;
+            } else if (perpendicularWord.length() == 0 && ( round == 1 || hasAdjacent)) {
+                // No perpendicular word or just one letter, consider it valid
+                System.out.println("No perpendicular word length test, pass");
+                allPerpendicularWordsValid = true;
+            } else if (perpendicularWord == " " && ( round == 1 || hasAdjacent)) {
+                System.out.println("No perpendicular word gap test, pass");
+                allPerpendicularWordsValid = true;
+            } else if (perpendicularWord.isEmpty() && (round == 1 || hasAdjacent)) {
+                System.out.println("No perpendicular word is empty test, pass");
+                allPerpendicularWordsValid = true;
+            } else {
+                System.out.println("Failed perpendicular word check");
+                System.out.printf("Perpendicular word that was built and verified: %s%n", perpendicularWord);
                 return false;
             }
         }
@@ -215,41 +237,52 @@ public class Game implements Serializable {
         }
 
         // For rounds > 1, ensure there's at least one adjacent tile
-        return round == 1 || hasAdjacent;
+        return (round == 1 && allPerpendicularWordsValid) || (hasAdjacent && allPerpendicularWordsValid);
+
     }
 
 
-    // checking for new word created, only for perpendicular will add parallel later
     public String newPerpendicularWord(int row, int column, char direction) {
         StringBuilder newWord = new StringBuilder();
 
-        int startRow = row, startCol = column;
+        // Determine traversal direction
+        boolean isHorizontal = (direction == 'H');
 
-        if (direction == 'H') {
+        // Find the starting point for the perpendicular word
+        int startRow = row, startCol = column;
+        if (isHorizontal) { // Horizontal placement forms a vertical word
+            // Move up to find the start of the vertical word
             while (startRow > 0 && board.getBoard()[startRow - 1][column] != '-') {
                 startRow--;
-
             }
-        } else {
+        } else { // Vertical placement forms a horizontal word
+            // Move left to find the start of the horizontal word
             while (startCol > 0 && board.getBoard()[row][startCol - 1] != '-') {
                 startCol--;
             }
         }
 
-        // forming the word
-        if (direction == 'H') {
+        // Build the word by traversing forward
+        if (isHorizontal) { // Horizontal placement forms a vertical word
             while (startRow <= 14 && board.getBoard()[startRow][column] != '-') {
                 newWord.append(board.getBoard()[startRow][column]);
                 startRow++;
             }
-        } else {
+        } else { // Vertical placement forms a horizontal word
             while (startCol <= 14 && board.getBoard()[row][startCol] != '-') {
                 newWord.append(board.getBoard()[row][startCol]);
                 startCol++;
             }
         }
-        return newWord.toString();
+
+        // Return the word formed (or an empty string if no valid word exists)
+        String result = newWord.toString();
+        if (result.isEmpty()) {
+            System.out.println("No perpendicular word formed");
+        }
+        return result;
     }
+
 
     private static boolean isValidWord(String word) {
         return wordDictionary.containsWord(word);
@@ -381,12 +414,13 @@ public class Game implements Serializable {
                 continue; // Skip processing if out of bounds
             }
 
-            // Form the new perpendicular word if the board spot is empty
-            if (board.getBoard()[startRow][startCol] == '-') {
+            // **Form the new perpendicular word** (whether the spot is empty or occupied by a letter)
+            if (board.getBoard()[startRow][startCol] == '-' || Character.isLetter(board.getBoard()[startRow][startCol])) {
+                // If the spot is empty, form the perpendicular word
                 String perpendicularWord = newPerpendicularWord(startRow, startCol, direction == 'H' ? 'V' : 'H');
 
                 // Check if this is a valid perpendicular word
-                if (perpendicularWord.length() > 1 && wordDictionary.containsWord(perpendicularWord)) {
+                if (!perpendicularWord.isEmpty() && perpendicularWord.length() > 1 && wordDictionary.containsWord(perpendicularWord)) {
                     // Skip the perpendicular word if it matches the first word placed during round 1
                     if (round == 1 && perpendicularWord.equalsIgnoreCase(word)) {
                         continue;  // Skip this as it's the first word placed
@@ -409,6 +443,7 @@ public class Game implements Serializable {
 
         return totalPerpendicularScore;
     }
+
 
 
     public int calculatePerpendicularScore(String perpendicularWord) {

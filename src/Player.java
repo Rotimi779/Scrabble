@@ -75,67 +75,75 @@ public class Player implements Serializable {
     }
 
     public boolean playTurn(String word, char direction, int row, int col) {
-        if (word.contains(String.valueOf('_'))) {
-            while(word.contains(String.valueOf('_'))){
-                String emptyTile = JOptionPane.showInputDialog("Enter a letter for the empty tile:");
-                StringBuilder sb = new StringBuilder(word);
-                int index = word.indexOf('_');
-                if (index != -1) {
-                    sb.setCharAt(index, emptyTile.charAt(0));
-                }
-                word = sb.toString();
-                blank_space += 1;
-            }
+        word = handleBlanks(word); // Handles blank tiles and user input
+        if (word == null) return false; // User canceled input
 
-            if (place(word, direction, row, col)){
-                updatePlayerScore(word, direction, row, col);
-                pickTile();
-                return true;
-            }
-        }
-
-
-        if (Game.wordDictionary.containsWord(word) && canFormWordFromTiles(word, game.getBoard(), row, col, direction)) {
-            if (place(word, direction, row, col)){
-                updatePlayerScore(word, direction, row, col);
-                pickTile();
-                return true;
-            }
-        }
-
-        if (!Game.wordDictionary.containsWord(word)){
+        // Check if the word is valid in the dictionary
+        if (!Game.wordDictionary.containsWord(word)) {
             game.getBoard().displayInvalidWord();
+            return false;
         }
 
+        // Check if the word can be formed from the available tiles
         if (!canFormWordFromTiles(word, game.getBoard(), row, col, direction)) {
             game.getBoard().displayInvalidPlacement();
+            return false;
+        }
+
+        // Check if the placement is valid before proceeding
+        if (!game.isValidPlacement(game.getBoard(), word, direction, row, col)) {
+            game.getBoard().displayInvalidPlacement();
+            return false;
+        }
+
+        // If all checks pass, place the word
+        if (place(word, direction, row, col)) {
+            updatePlayerScore(word, direction, row, col);
+            pickTile();
+            return true;
         }
 
         return false;
     }
 
-    //methods
-    public boolean place(String word, char direction, int row, int column) {
-        for (int i = 0; i < word.length(); i++) {
-            if (direction == 'H') {
-                if (game.isValidPlacement(game.getBoard(), word, direction, row, column)) {
 
-                    game.getBoard().getBoard()[row][column + i] = word.charAt(i);
-                } else {
-                    System.out.println("Invalid placement");
-                    return false;
-                }
-            } else if (direction == 'V') {
-                if (game.isValidPlacement(game.getBoard(), word, direction, row, column)) {
-                    game.getBoard().getBoard()[row + i][column] = word.charAt(i);
-                } else {
-                    System.out.println("Invalid placement");
-                    return false;
-                }
+    private String handleBlanks(String word) {
+        while (word.contains("_")) {
+            String replacement = JOptionPane.showInputDialog("Enter a letter for the blank tile (_):");
+            if (replacement == null || replacement.isEmpty() || replacement.length() > 1) {
+                JOptionPane.showMessageDialog(null, "Invalid input. Please enter a single letter.");
+                continue;
+            }
+            word = word.replaceFirst("_", replacement);
+        }
+        return word;
+    }
+
+
+    //methods
+    public boolean place(String word, char direction, int row, int col) {
+        System.out.printf("Attempting to place word '%s' at (%d, %d) in direction '%c'%n", word, row, col, direction);
+
+        // Place the word
+        char[][] board = game.getBoard().getBoard();
+        for (int i = 0; i < word.length(); i++) {
+            int currentRow = row + (direction == 'V' ? i : 0);
+            int currentCol = col + (direction == 'H' ? i : 0);
+
+            if (board[currentRow][currentCol] == '-') {
+                board[currentRow][currentCol] = word.charAt(i);
+                System.out.printf("Placed letter '%c' at (%d, %d)%n", word.charAt(i), currentRow, currentCol);
+            } else {
+                System.out.printf("Skipped placing '%c' at (%d, %d) because the spot is already occupied%n", word.charAt(i), currentRow, currentCol);
             }
         }
+
+        System.out.println("Word successfully placed: " + word);
         return true;
     }
+
+
+
 
     public void pickTile() {
         //For refilling players tiles
