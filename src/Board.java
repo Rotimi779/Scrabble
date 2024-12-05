@@ -1,9 +1,10 @@
 import javax.swing.*;
 import java.awt.*;
+import java.io.Serializable;
 import java.util.Arrays;
 
 
-public class Board extends JFrame {
+public class Board extends JFrame implements Serializable {
     //attributes
     private ScrabbleController controller;
     private JButton[][] buttons;

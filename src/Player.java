@@ -1,8 +1,9 @@
 import javax.swing.*;
+import java.io.Serializable;
 import java.util.*;
 
 
-public class Player {
+public class Player implements Serializable {
     protected int score = 0;
     protected List<Tiles> tiles;
     protected Game game;
