@@ -53,6 +53,10 @@ public class TileBag {
         return scoreMap.getOrDefault(letter, 0);  // Get score from map, defaulting to 0
     }
 
+    public void addTile(char letter, int score) {
+        bag.add(new Tiles(letter, score));
+    }
+
     // Draw a random tile from the bag
     public Tiles drawTile() {
         if (bag.isEmpty()) {

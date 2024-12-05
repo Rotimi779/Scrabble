@@ -18,6 +18,10 @@ public class Player {
         tiles.add(tileBag.drawTile());
     }
 
+    public void setTiles(List<Tiles> tiles) {
+        this.tiles = tiles;
+    }
+
     public String displayTiles(int turn) {
         StringBuilder str = new StringBuilder("Player");
         str.append(turn).append("'s tiles:");

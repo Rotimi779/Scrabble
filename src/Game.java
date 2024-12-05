@@ -12,9 +12,9 @@ public class Game implements Serializable {
     public ArrayList<Player> players;
     private Player currentPlayer;
     public int round = 1;
-//    public static int firstOrSecond = 1;
+    //    public static int firstOrSecond = 1;
     private final Map<String, String> playedList;
-    private LinkedList<GameState> gameStates;
+    private Stack<GameState> gameStates;
 
     private static Set<String> scoredWords = new HashSet<>();
 
@@ -30,10 +30,10 @@ public class Game implements Serializable {
         currentPlayer = player1;
         playedList = new HashMap<>();
         this.board = board;
-        gameStates = new LinkedList<GameState>();
+        gameStates = new Stack<GameState>();
 
         // Give the players their tiles
-        for (int i = 0; i < 7; i ++){
+        for (int i = 0; i < 7; i++) {
             player1.addTile(tilebag);
             player2.addTile(tilebag);
             aiPlayer.addTile(tilebag);
@@ -48,25 +48,39 @@ public class Game implements Serializable {
         System.out.println("Welcome to the Game of Scrabble");
     }
 
-    public LinkedList<GameState> getStates(){
+    public Stack<GameState> getStates() {
         return gameStates;
     }
-    public int getTurn(){
+
+    public int getTurn() {
         return turn;
     }
 
-    public Board getBoard(){
+    public Board getBoard() {
         return board;
     }
 
-    public void setGame(GameState state){
+    public void setGame(GameState state) {
         int i = 0;
-        for (Player player : players){
+        for (Player player : players) {
             player.score = state.getScores()[i];
+            int j = 0;
+            for (char c : state.getTiles().get(i)) {
+                if (player.tiles.get(j).getLetter() != c) {
+                    player.tiles.add(j, new Tiles(c, tilebag.getScore(c))); // set the players tiles to that
+                    tilebag.addTile(c, tilebag.getScore(c)); // add the tiles back to the bag
+                }
+            }
             i++;
         }
         this.turn = state.getTurn();
-        this.currentPlayer = this.players.get(turn - 1);
+//        this.currentPlayer = this.players.get(turn % players.size());
+        System.out.println("Turn: " + state.getTurn());
+        if (state.getTurn() < 3) {
+            this.currentPlayer = this.players.get(state.getTurn());
+        } else {
+            this.currentPlayer = this.players.get(state.getTurn() - 1);
+        }
         this.round = state.getRound();
     }
 
@@ -76,11 +90,11 @@ public class Game implements Serializable {
             if (aiPlayer.playTurn()) {
                 System.out.println("AIPlayer " + currentPlayer + " has played a tile.");
                 switchTurn();
-            }else{
+            } else {
                 System.out.println("AIPlayer " + currentPlayer + " did not play a tile.");
             }
-        }else{
-            if (currentPlayer.playTurn(word, direction, row, col)){
+        } else {
+            if (currentPlayer.playTurn(word, direction, row, col)) {
                 // store the words that have been played in the game
                 String value = row + col + String.valueOf(direction);
                 playedList.put(word, value);
@@ -90,24 +104,26 @@ public class Game implements Serializable {
 
     }
 
-    public void switchTurn(){
+    public void switchTurn() {
+//        gameStates.add(new GameState(board, this));
         round++;
-        if (round % players.size() == 0) {
-            turn = round;
-        }else{
-            turn = (round % players.size());
+        if (players.size() % round == 0) {
+            turn = players.size();
+        } else {
+            turn = (players.size() % round);
         }
 
         currentPlayer = players.get((round - 1) % players.size());
-        if (currentPlayer instanceof AIPlayer aiPlayer){
+        if (currentPlayer instanceof AIPlayer aiPlayer) {
             boolean played = false;
             System.out.println("I am AI and I rule!!!!");
-            
-            aiPlayer.playTurn();
             gameStates.add(new GameState(board, this));
+            aiPlayer.playTurn();
+
             switchTurn();
 
         }
+
 //        if (turn == 1){
 //            turn = 2;
 //            currentPlayer = players.get(1);
@@ -119,7 +135,7 @@ public class Game implements Serializable {
 //        }
     }
 
-    public int getRound(){
+    public int getRound() {
         return round;
     }
 
@@ -154,7 +170,7 @@ public class Game implements Serializable {
             }
 
             // Check for adjacent tiles if `round > 1`
-            if (round> 1) {
+            if (round > 1) {
                 if (direction == 'H') {
                     // Check above and below the current tile for adjacency
                     if ((row > 0 && board.getBoard()[row - 1][column + i] != '-') ||
@@ -172,13 +188,13 @@ public class Game implements Serializable {
 
 
             // Validate perpendicular word creation
-            String perpendicularWord = newPerpendicularWord( row + (direction == 'V' ? i : 0), column + (direction == 'H' ? i : 0), direction);
+            String perpendicularWord = newPerpendicularWord(row + (direction == 'V' ? i : 0), column + (direction == 'H' ? i : 0), direction);
             if (perpendicularWord.length() > 1 && !isValidWord(perpendicularWord)) {
                 return false;
             }
         }
 
-        if(round == 1){
+        if (round == 1) {
             boolean touchesMiddleTile = false;
 
             for (int i = 0; i < word.length(); i++) {
@@ -202,9 +218,8 @@ public class Game implements Serializable {
     }
 
 
-
     // checking for new word created, only for perpendicular will add parallel later
-    public String newPerpendicularWord(int row, int column, char direction){
+    public String newPerpendicularWord(int row, int column, char direction) {
         StringBuilder newWord = new StringBuilder();
 
         int startRow = row, startCol = column;
@@ -214,7 +229,7 @@ public class Game implements Serializable {
                 startRow--;
 
             }
-        }else {
+        } else {
             while (startCol > 0 && board.getBoard()[row][startCol - 1] != '-') {
                 startCol--;
             }
@@ -235,7 +250,7 @@ public class Game implements Serializable {
         return newWord.toString();
     }
 
-    private static boolean isValidWord(String word){
+    private static boolean isValidWord(String word) {
         return wordDictionary.containsWord(word);
     }
 
@@ -437,11 +452,6 @@ public class Game implements Serializable {
                 score += letterScore;
             }
         }
-
         return score;
     }
-
-    //Get the game to serialize
-    public Game getGame(){ return this;}
-
 }
