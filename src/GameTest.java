@@ -98,7 +98,7 @@ class GameTest {
             System.out.println();
         }
 
-        assertEquals(game.players.getFirst().score, 0);
+        assertEquals(game.players.get(0).score, 0);
         assertEquals(count, 0);
 
     }
@@ -126,7 +126,7 @@ class GameTest {
             System.out.println();
         }
 
-        assertEquals(game.players.getFirst().score, 2);
+        assertEquals(game.players.get(0).score, 2);
         assertEquals(count, 3);
 
     }

@@ -206,4 +206,27 @@ public class ScrabbleController implements Serializable {
     public void handleHelp(){
 
     }
+
+    public void handleLayout(String layout){
+        if (game.round != 1)
+        {
+            JOptionPane.showMessageDialog(null,"You have passed the first play. You can no longer change the board");
+        }
+        else
+        {
+            switch(layout)
+            {
+                case "normal":
+                    board.setLayout(board.getButtons(),"normal.xml");
+                    break;
+                case "clustered":
+                    board.setLayout(board.getButtons(),"clustered.xml");
+                    System.out.println("LAYOUT SHOULD CHANGE TO CLUSTERED");
+                    break;
+                case "circular":
+                    board.setLayout(board.getButtons(),"circular.xml");
+                    break;
+            }
+        }
+    }
 }

@@ -1,7 +1,16 @@
+import org.w3c.dom.Document;
+import org.w3c.dom.NodeList;
+import org.xml.sax.SAXException;
+
+import org.w3c.dom.*;
 import javax.swing.*;
+import javax.xml.parsers.DocumentBuilder;
+import javax.xml.parsers.DocumentBuilderFactory;
+import javax.xml.parsers.ParserConfigurationException;
 import java.awt.*;
+import java.io.File;
+import java.io.IOException;
 import java.io.Serializable;
-import java.util.Arrays;
 
 
 public class Board extends JFrame implements Serializable {
@@ -24,6 +33,11 @@ public class Board extends JFrame implements Serializable {
     private MenuItem undoItem;
     private MenuItem saveItem;
     private MenuItem loadItem;
+    private Menu layoutMenu;
+    private MenuItem normalLayout;
+    private MenuItem clusteredLayout;
+    private MenuItem circularLayout;
+
 
 
     //constructor
@@ -37,14 +51,21 @@ public class Board extends JFrame implements Serializable {
         menuBar = new MenuBar();
         fileMenu = new Menu("File");
         gameMenu = new Menu("Game");
+        layoutMenu = new Menu("Layout");
         menuBar.add(fileMenu);
         menuBar.add(gameMenu);
+        menuBar.add(layoutMenu);
         quitItem = new MenuItem("Quit");
         helpItem = new MenuItem("Help");
         redoItem = new MenuItem("Redo");
         undoItem = new MenuItem("Undo");
         saveItem = new MenuItem("Save");
         loadItem = new MenuItem("Load");
+        normalLayout = new MenuItem("Normal");
+        clusteredLayout = new MenuItem("Clustered");
+        circularLayout = new MenuItem("Circular");
+
+
 
         // add the menu to menu items to their respective menus
         // game menu
@@ -57,6 +78,10 @@ public class Board extends JFrame implements Serializable {
         fileMenu.add(saveItem);
         fileMenu.add(loadItem);
         fileMenu.add(quitItem);
+
+        layoutMenu.add(normalLayout);
+        layoutMenu.add(clusteredLayout);
+        layoutMenu.add(circularLayout);
 
         // set the menu bar
         this.setMenuBar(menuBar);
@@ -74,13 +99,13 @@ public class Board extends JFrame implements Serializable {
 
 
         board = new char[15][15];
-        for (int i = 0; i< 15;i++){
-            for (int j = 0; j < 15; j++){
+        for (int i = 0; i< 15;i++) {
+            for (int j = 0; j < 15; j++) {
                 board[i][j] = '-';
             }
 
         }
-        initializeGrid(grid,buttons);
+        initializeGrid(grid,buttons,"normal.xml");
         add(grid, BorderLayout.CENTER);
 
         bottomPanel = new JPanel(new FlowLayout());
@@ -100,6 +125,10 @@ public class Board extends JFrame implements Serializable {
         loadItem.addActionListener(e -> {controller.handleLoad();});
         quitItem.addActionListener(e -> {controller.handleExit();});
         helpItem.addActionListener(e -> {controller.handleHelp();});
+        normalLayout.addActionListener(e -> {controller.handleLayout("normal");});
+        clusteredLayout.addActionListener(e -> {controller.handleLayout("clustered");});
+        circularLayout.addActionListener(e -> {controller.handleLayout("circular");});
+
     }
 
     public void setBoard(String[] board){
@@ -127,7 +156,7 @@ public class Board extends JFrame implements Serializable {
         return new PlayEvent(this, word, direction);
     }
 
-    public void initializeGrid(JPanel grid,JButton [][] buttons) {
+    public void initializeGrid(JPanel grid,JButton [][] buttons,String xmlFile) {
         for (int i = 0; i < 15; i++) {
             for (int j = 0; j < 15; j++) {
                 int row = i;
@@ -139,8 +168,129 @@ public class Board extends JFrame implements Serializable {
                 grid.add(buttons[i][j]);
             }
         }
-        updateButtonColors(buttons);
+        File xml = new File(xmlFile); // Path to your XML file
+        DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
+        DocumentBuilder builder = null;
+        try {
+            builder = factory.newDocumentBuilder();
+        } catch (ParserConfigurationException e) {
+            throw new RuntimeException(e);
+        }
+        Document doc = null;
+        try {
+            doc = builder.parse(xml);
+        } catch (SAXException | IOException e) {
+            throw new RuntimeException(e);
+        }
 
+        NodeList buttonNodes = doc.getElementsByTagName("Button");
+        switch(xmlFile){
+            case("normal.xml"):
+                // Process the buttons based on XML data
+                for (int i = 0; i < buttonNodes.getLength(); i++) {
+                    Element buttonElement = (Element) buttonNodes.item(i);
+
+                    int row = Integer.parseInt(buttonElement.getAttribute("row"));
+                    int col = Integer.parseInt(buttonElement.getAttribute("col"));
+
+                    JButton button = buttons[row][col];
+                    updateButtonColors(buttons, row, col,"normal.xml");
+                }
+                break;
+            case("clustered.xml"):
+                // Process the buttons based on XML data
+                for (int i = 0; i < buttonNodes.getLength(); i++) {
+                    Element buttonElement = (Element) buttonNodes.item(i);
+
+                    int row = Integer.parseInt(buttonElement.getAttribute("row"));
+                    int col = Integer.parseInt(buttonElement.getAttribute("col"));
+
+                    JButton button = buttons[row][col];
+                    updateButtonColors(buttons, row, col,"clustered.xml");
+                }
+                break;
+            case("circular.xml"):
+                // Process the buttons based on XML data
+                for (int i = 0; i < buttonNodes.getLength(); i++) {
+                    Element buttonElement = (Element) buttonNodes.item(i);
+
+                    int row = Integer.parseInt(buttonElement.getAttribute("row"));
+                    int col = Integer.parseInt(buttonElement.getAttribute("col"));
+
+                    JButton button = buttons[row][col];
+                    updateButtonColors(buttons, row, col,"circular.xml");
+                }
+                break;
+        }
+
+//        add(grid, BorderLayout.CENTER);
+        //updateButtonColors(buttons);
+
+    }
+
+    public void setLayout(JButton [][]buttons, String xmlFile){
+        for (int i = 0; i < 15; i++) {
+            for (int j = 0; j < 15; j++) {
+                int row = i;
+                int col = j;
+                buttons[i][j].setBackground(Color.lightGray);
+            }
+        }
+        File xml = new File(xmlFile); // Path to your XML file
+        DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
+        DocumentBuilder builder = null;
+        try {
+            builder = factory.newDocumentBuilder();
+        } catch (ParserConfigurationException e) {
+            throw new RuntimeException(e);
+        }
+        Document doc = null;
+        try {
+            doc = builder.parse(xml);
+        } catch (SAXException | IOException e) {
+            throw new RuntimeException(e);
+        }
+
+        NodeList buttonNodes = doc.getElementsByTagName("Button");
+        switch(xmlFile){
+            case("normal.xml"):
+                // Process the buttons based on XML data
+                for (int i = 0; i < buttonNodes.getLength(); i++) {
+                    Element buttonElement = (Element) buttonNodes.item(i);
+
+                    int row = Integer.parseInt(buttonElement.getAttribute("row"));
+                    int col = Integer.parseInt(buttonElement.getAttribute("col"));
+
+                    JButton button = buttons[row][col];
+                    updateButtonColors(buttons, row, col,"normal.xml");
+                }
+                break;
+            case("clustered.xml"):
+                // Process the buttons based on XML data
+                for (int i = 0; i < buttonNodes.getLength(); i++) {
+                    Element buttonElement = (Element) buttonNodes.item(i);
+
+                    int row = Integer.parseInt(buttonElement.getAttribute("row"));
+                    int col = Integer.parseInt(buttonElement.getAttribute("col"));
+
+                    JButton button = buttons[row][col];
+                    updateButtonColors(buttons, row, col,"clustered.xml");
+                }
+                break;
+            case("circular.xml"):
+                // Process the buttons based on XML data
+                for (int i = 0; i < buttonNodes.getLength(); i++) {
+                    Element buttonElement = (Element) buttonNodes.item(i);
+
+                    int row = Integer.parseInt(buttonElement.getAttribute("row"));
+                    int col = Integer.parseInt(buttonElement.getAttribute("col"));
+
+                    JButton button = buttons[row][col];
+                    updateButtonColors(buttons, row, col,"circular.xml");
+                }
+                break;
+        }
+        updateBoardDisplay();
     }
 
     public char[][] getBoard() {
@@ -196,68 +346,169 @@ public class Board extends JFrame implements Serializable {
     }
 
     //For setting background colours
-    private static void updateButtonColors(JButton[][] buttons) {
-        for (int row = 0; row < 15; row++) {
-            for (int col = 0; col < 15; col++) {
-                if (isTripleWord(row, col)) {
-                    buttons[row][col].setBackground(Color.red);
-                    buttons[row][col].setText("Triple Word Score");
-                    buttons[row][col].setFont(new Font("Arial", Font.PLAIN, 8));
-                    buttons[row][col].setMargin(new Insets(10,10,10,10));
-                } else if (isDoubleWord(row, col)) {
-                    buttons[row][col].setBackground(Color.pink);
-                    buttons[row][col].setText("Double Word Score");
-                    buttons[row][col].setFont(new Font("Arial", Font.PLAIN, 8));
-                    buttons[row][col].setMargin(new Insets(10,10,10,10));
-                } else if (isTripleLetter(row, col)) {
-                    buttons[row][col].setBackground(Color.blue);
-                    buttons[row][col].setText("Triple Letter Score");
-                    buttons[row][col].setFont(new Font("Arial", Font.PLAIN, 8));
-                    buttons[row][col].setMargin(new Insets(10,10,10,10));
-                } else if (isDoubleLetter(row, col)) {
-                    buttons[row][col].setBackground(Color.cyan);
-                    buttons[row][col].setText("Double Letter Score");
-                    buttons[row][col].setFont(new Font("Arial", Font.PLAIN, 8));
-                    buttons[row][col].setMargin(new Insets(10,10,10,10));
-                }
-            }
+    private static void updateButtonColors(JButton[][] buttons,int row, int col, String xmlFile) {
+        if (isTripleWord(row, col,xmlFile)) {
+            buttons[row][col].setBackground(Color.red);
+            buttons[row][col].setText("Triple Word Score");
+            buttons[row][col].setFont(new Font("Arial", Font.PLAIN, 8));
+            buttons[row][col].setMargin(new Insets(10,10,10,10));
+        } else if (isDoubleWord(row, col,xmlFile)) {
+            buttons[row][col].setBackground(Color.pink);
+            buttons[row][col].setText("Double Word Score");
+            buttons[row][col].setFont(new Font("Arial", Font.PLAIN, 8));
+            buttons[row][col].setMargin(new Insets(10,10,10,10));
+        } else if (isTripleLetter(row, col,xmlFile)) {
+            buttons[row][col].setBackground(Color.blue);
+            buttons[row][col].setText("Triple Letter Score");
+            buttons[row][col].setFont(new Font("Arial", Font.PLAIN, 8));
+            buttons[row][col].setMargin(new Insets(10,10,10,10));
+        } else if (isDoubleLetter(row, col,xmlFile)) {
+            buttons[row][col].setBackground(Color.cyan);
+            buttons[row][col].setText("Double Letter Score");
+            buttons[row][col].setFont(new Font("Arial", Font.PLAIN, 8));
+            buttons[row][col].setMargin(new Insets(10,10,10,10));
         }
     }
 
-        private static boolean isTripleWord(int row, int col) {
-        return (row == col && (row == 0 || row == 14)) || // Diagonal corners
-                (row == 0 || row == 14) && (col == 0 || col == 14) || // Outer corners
-                (row == 7 && (col == 0 || col == 14)) || // Middle row edges
-                (col == 7 && (row == 0 || row == 14)); // Middle column edges
+        private static boolean isTripleWord(int row, int col,String xmlFile) {
+        switch(xmlFile){
+            case("normal.xml"):
+                return (row == col && (row == 0 || row == 14)) || // Diagonal corners
+                        (row == 0 || row == 14) && (col == 0 || col == 14) || // Outer corners
+                        (row == 7 && (col == 0 || col == 14)) || // Middle row edges
+                        (col == 7 && (row == 0 || row == 14)); // Middle column edges
+            case("clustered.xml"):
+                // Triple Word Score positions (6 tiles clustered near the center)
+                return (row == 0 && col == 0) ||
+                        (row == 0 && col == 14) ||
+                        (row == 14 && col == 0) ||
+                        (row == 14 && col == 14) ||
+                        (row == 7 && col == 0) ||
+                        (row == 7 && col == 7) ||
+                        (row == 7 && col == 14);
+            case("circular.xml"):
+                // Triple Word squares at specific coordinates
+                return (row == 6 && col == 6) ||
+                        (row == 6 && col == 8) ||
+                        (row == 8 && col == 8) ||
+                        (row == 8 && col == 6) ||
+                        (row == 4 && col == 4) ||
+                        (row == 10 && col == 4) ||
+                        (row == 4 && col == 10) ||
+                        (row == 10 && col == 10);
+        }
+        return true;
     }
 
-    private static boolean isDoubleWord(int row, int col) {
-        // Double Word squares
-        return (row == col && (row == 1 || row == 2 || row == 3 || row == 4 || row == 10 || row == 11 || row == 12 || row == 13 || row == 7)) ||
-                (row + col == 14 && (row == 1 || row == 2 || row == 3 || row == 4 || row == 10 || row == 11 || row == 12 || row == 13 || row == 7));
+    private static boolean isDoubleWord(int row, int col,String xmlFile) {
+        switch(xmlFile){
+            case("normal.xml"):
+                // Double Word squares
+                return (row == col && (row == 1 || row == 2 || row == 3 || row == 4 || row == 10 || row == 11 || row == 12 || row == 13 || row == 7)) ||
+                        (row + col == 14 && (row == 1 || row == 2 || row == 3 || row == 4 || row == 10 || row == 11 || row == 12 || row == 13 || row == 7));
+            case("clustered.xml"):
+                // Double Word squares placement based on the "Clustered High-Impact Layout"
+                return (row == 3 && col == 7) || (row == 11 && col == 7) ||
+                        (row == 7 && col == 3) || (row == 7 && col == 11) ||
+                        (row == 11 && col == 3) || (row == 3 && col == 11) ||
+                        (row == 6 && col == 6) || (row == 6 && col == 8) || (row == 8 && col == 6) || (row == 8 && col == 8) ||
+                        (row == 3 && col == 3) || (row == 11 && col == 11);
+            case("circular.xml"):
+                // Double Word squares at the specified positions
+                return (row == 3 && col == 3) ||
+                        (row == 11 && col == 3) ||
+                        (row == 3 && col == 11) ||
+                        (row == 11 && col == 11) ||
+                        (row == 5 && col == 5) ||
+                        (row == 5 && col == 9) ||
+                        (row == 9 && col == 5) ||
+                        (row == 9 && col == 9) ||
+                        (row == 5 && col == 7) ||
+                        (row == 9 && col == 7) ||
+                        (row == 0 && col == 7) ||
+                        (row == 14 && col == 7);
+        }
+        return true;
     }
 
-    private static boolean isTripleLetter(int row, int col) {
-        // Triple Letter squares
-        return (row == 1 && (col == 5 || col == 9)) ||
-                (row == 5 && (col == 1 || col == 5 || col == 9 || col == 13)) ||
-                (row == 9 && (col == 1 || col == 5 || col == 9 || col == 13)) ||
-                (row == 13 && (col == 5 || col == 9));
+    private static boolean isTripleLetter(int row, int col,String xmlFile) {
+        switch(xmlFile){
+            case("normal.xml"):
+                // Triple Letter squares
+                return (row == 1 && (col == 5 || col == 9)) ||
+                        (row == 5 && (col == 1 || col == 5 || col == 9 || col == 13)) ||
+                        (row == 9 && (col == 1 || col == 5 || col == 9 || col == 13)) ||
+                        (row == 13 && (col == 5 || col == 9));
+            case("clustered.xml"):
+                // Triple Letter Score squares (specified positions)
+                return (row == 2 && col == 2) ||
+                        (row == 6 && col == 2) ||
+                        (row == 8 && col == 2) ||
+                        (row == 12 && col == 2) ||
+                        (row == 5 && col == 5) ||
+                        (row == 9 && col == 5) ||
+                        (row == 5 && col == 9) ||
+                        (row == 9 && col == 9) ||
+                        (row == 2 && col == 12) ||
+                        (row == 6 && col == 12) ||
+                        (row == 8 && col == 12) ||
+                        (row == 12 && col == 12);
+            case("circular.xml"):
+                // Triple Letter squares based on the provided coordinates
+                return (row == 2 && col == 2) ||
+                        (row == 12 && col == 2) ||
+                        (row == 2 && col == 12) ||
+                        (row == 12 && col == 12) ||
+                        (row == 2 && col == 7) ||
+                        (row == 12 && col == 7) ||
+                        (row == 11 && col == 5) ||
+                        (row == 11 && col == 9) ||
+                        (row == 3 && col == 5) ||
+                        (row == 3 && col == 9) ||
+                        (row == 7 && col == 5) ||
+                        (row == 7 && col == 9);
+        }
+        return true;
     }
 
-    private static boolean isDoubleLetter(int row, int col) {
-        // Double Letter squares
-        return (row == 3 && col == 0) || (row == 11 && col == 0) ||
-                (row == 6 && col == 2) || (row == 8 && col == 2) ||
-                (row == 0 && col == 3) || (row == 7 && col == 3) || (row == 14 && col == 3) ||
-                (row == 2 && col == 6) || (row == 6 && col == 6) || (row == 8 && col == 6) ||
-                (row == 12 && col == 6) || (row == 3 && col == 7) || (row == 11 && col == 7) ||
-                (row == 2 && col == 8) || (row == 6 && col == 8) || (row == 8 && col == 8) ||
-                (row == 12 && col == 8) || (row == 0 && col == 11) || (row == 7 && col == 11) ||
-                (row == 14 && col == 11) || (row == 6 && col == 12) || (row == 8 && col == 12) ||
-                (row == 3 && col == 14) || (row == 11 && col == 14);
+    private static boolean isDoubleLetter(int row, int col,String xmlFile) {
+        switch(xmlFile){
+            case("normal.xml"):
+                // Double Letter squares
+                return (row == 3 && col == 0) || (row == 11 && col == 0) ||
+                        (row == 6 && col == 2) || (row == 8 && col == 2) ||
+                        (row == 0 && col == 3) || (row == 7 && col == 3) || (row == 14 && col == 3) ||
+                        (row == 2 && col == 6) || (row == 6 && col == 6) || (row == 8 && col == 6) ||
+                        (row == 12 && col == 6) || (row == 3 && col == 7) || (row == 11 && col == 7) ||
+                        (row == 2 && col == 8) || (row == 6 && col == 8) || (row == 8 && col == 8) ||
+                        (row == 12 && col == 8) || (row == 0 && col == 11) || (row == 7 && col == 11) ||
+                        (row == 14 && col == 11) || (row == 6 && col == 12) || (row == 8 && col == 12) ||
+                        (row == 3 && col == 14) || (row == 11 && col == 14);
+            case("clustered.xml"):
+                // Double Letter Score squares (on the outer edges)
+                return (row == 0 && (col == 1 || col == 3 || col == 5 || col == 9 || col == 11 || col == 13)) || // Top edge
+                        (row == 14 && (col == 1 || col == 3 || col == 5 || col == 9 || col == 11 || col == 13)) || // Bottom edge
+                        (col == 0 && (row == 1 || row == 3 || row == 5 || row == 9 || row == 11 || row == 13)) || // Left edge
+                        (col == 7 && (row == 5 || row == 9 || row == 1 || row == 13)) ||
+                        (col == 14 && (row == 1 || row == 3 || row == 5 || row == 9 || row == 11 || row == 13));   // Right edge
+            case("circular.xml"):
+                // Double Letter squares at the given positions
+                return (row == 0 && col == 0) || (row == 0 && col == 14) ||
+                        (row == 14 && col == 0) || (row == 14 && col == 14) ||
+                        (row == 1 && col == 1) || (row == 1 && col == 13) ||
+                        (row == 13 && col == 1) || (row == 13 && col == 13) ||
+                        (row == 1 && col == 6) || (row == 1 && col == 8) ||
+                        (row == 13 && col == 6) || (row == 13 && col == 8) ||
+                        (row == 14 && col == 5) || (row == 14 && col == 9) ||
+                        (row == 0 && col == 5) || (row == 0 && col == 9) ||
+                        (row == 7 && col == 0) || (row == 7 && col == 14) ||
+                        (row == 7 && col == 7);
+        }
+        return true;
+
     }
 
     public JButton[][] getButtons(){ return this.buttons; }
 
+    public JPanel getGrid(){ return this.grid;}
 }
