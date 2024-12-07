@@ -508,6 +508,10 @@ public class Board extends JFrame implements Serializable {
 
     }
 
+    public void displayWinnerMessage(int winnerNum){
+        JOptionPane.showMessageDialog(this, "Player "+ winnerNum +" has won the game!!!");
+    }
+
     public JButton[][] getButtons(){ return this.buttons; }
 
     public JPanel getGrid(){ return this.grid;}

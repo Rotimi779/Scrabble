@@ -100,6 +100,30 @@ public class AIPlayer extends Player {
         return true;
     }
 
+    private boolean isValid(int row, int col, char dir, Board board, String word){
+        int i = 1;
+
+
+        // checks if the it
+        if (dir == 'V'){
+            // checks if the tile behind the start is empty
+            while (board.getBoard()[row][col + i] == '-' && board.getBoard()[row - 1][col] == '-' && game.isValidPlacement(board, word, 'H', i, dir)) {
+                i++;
+            }
+        }else if (dir == 'H'){
+            // checks if the tile behind the start is empty
+            while (board.getBoard()[row + i][col] == '-' && board.getBoard()[row][col - 1] == '-' && game.isValidPlacement(board, word, 'H', i, dir)) {
+                i++;
+            }
+        }
+
+        // if its
+        if (Game.wordDictionary.containsWord(word) && i >= word.length() - 1) {
+            return true;
+        }
+        return false;
+    }
+
     private boolean isValidPlacementWithLine(int row, int col, char direction, String word, Board board) {
         StringBuilder fullLine = new StringBuilder();
 
