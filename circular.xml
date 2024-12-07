@@ -1,0 +1,58 @@
+<GridLayout rows="15" columns="15">
+    <Button row="6" col="6" />
+    <Button row="6" col="8" />
+    <Button row="8" col="8" />
+    <Button row="8" col="6" />
+    <Button row="4" col="4" />
+    <Button row="10" col="4" />
+    <Button row="4" col="10" />
+    <Button row="10" col="10" />
+
+    <Button row="3" col="3" />
+    <Button row="11" col="3" />
+    <Button row="3" col="11" />
+    <Button row="11" col="11" />
+    <Button row="5" col="5" />
+    <Button row="5" col="9" />
+    <Button row="9" col="5" />
+    <Button row="9" col="9" />
+    <Button row="5" col="7" />
+    <Button row="9" col="7" />
+    <Button row="0" col="7" />
+    <Button row="14" col="7" />
+
+    <Button row="2" col="2" />
+    <Button row="12" col="2" />
+    <Button row="2" col="12" />
+    <Button row="12" col="12" />
+    <Button row="2" col="7" />
+    <Button row="12" col="7" />
+    <Button row="11" col="5" />
+    <Button row="11" col="9" />
+    <Button row="3" col="5" />
+    <Button row="3" col="9" />
+    <Button row="7" col="5" />
+    <Button row="7" col="9" />
+
+    <Button row="0" col="0" />
+    <Button row="0" col="14" />
+    <Button row="14" col="0" />
+    <Button row="14" col="14" />
+    <Button row="1" col="1" />
+    <Button row="1" col="13" />
+    <Button row="13" col="1" />
+    <Button row="13" col="13" />
+    <Button row="1" col="6" />
+    <Button row="1" col="8" />
+    <Button row="13" col="6" />
+    <Button row="13" col="8" />
+    <Button row="14" col="5" />
+    <Button row="14" col="9" />
+    <Button row="0" col="5" />
+    <Button row="0" col="9" />
+    <Button row="7" col="0" />
+    <Button row="7" col="14" />
+    <Button row="7" col="7" />
+
+</GridLayout>
+
