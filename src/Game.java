@@ -15,6 +15,7 @@ public class Game implements Serializable {
     //    public static int firstOrSecond = 1;
     private final Map<String, String> playedList;
     private Stack<GameState> gameStates;
+    private Stack<GameState> redoStates;
 
     public static Set<String> scoredWords = new HashSet<>();
 
@@ -31,6 +32,7 @@ public class Game implements Serializable {
         playedList = new HashMap<>();
         this.board = board;
         gameStates = new Stack<GameState>();
+        redoStates = new Stack<GameState>();
 
         // Give the players their tiles
         for (int i = 0; i < 7; i++) {
@@ -50,6 +52,10 @@ public class Game implements Serializable {
 
     public Stack<GameState> getStates() {
         return gameStates;
+    }
+
+    public Stack<GameState> getRedoStates() {
+        return redoStates;
     }
 
     public int getTurn() {

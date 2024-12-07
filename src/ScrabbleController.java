@@ -67,10 +67,11 @@ public class ScrabbleController implements Serializable {
 //            board.setBoard(state.getBoard());
 //            game.setGame(state);
 //            System.out.println("The move has been redone");
-            board.setBoard(previousGameState.getBoard());
-            game.setGame(previousGameState);
+            GameState redoState = game.getRedoStates().pop();
+            board.setBoard(redoState.getBoard());
+            game.setGame(redoState);
 
-            game.getStates().add(previousGameState);
+            game.getStates().add(redoState);
 
             System.out.println("The move has been undone");
 //            board.updateBoardDisplay();
@@ -91,6 +92,7 @@ public class ScrabbleController implements Serializable {
             // to retrieve the previous game state
             GameState state = game.getStates().pop();
             previousGameState = new GameState(board, game);
+            game.getRedoStates().add(previousGameState);
 
             // for testing
 //            System.out.println("These are now the previous states");
