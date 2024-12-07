@@ -131,4 +131,46 @@ class GameTest {
 
     }
 
+    @Test
+    void saveTest(){
+        board = new Board();
+        game = new Game(board);
+        ScrabbleController controller = new ScrabbleController(game, board);
+        board.setController(controller);
+        game.getStates().add(new GameState(board, game));
+        game.getCurrentPlayer().place("sit", 'H', 7, 7);
+        game.getCurrentPlayer().updatePlayerScore("sit", 'H', 7, 7);
+        game.switchTurn();
+
+        assertEquals(controller.handleSave(),true);
+    }
+
+    @Test
+    void loadTest(){
+        board = new Board();
+        game = new Game(board);
+        ScrabbleController controller = new ScrabbleController(game, board);
+        board.setController(controller);
+        game.getStates().add(new GameState(board, game));
+        game.getCurrentPlayer().place("sit", 'H', 7, 7);
+        game.getCurrentPlayer().updatePlayerScore("sit", 'H', 7, 7);
+        game.switchTurn();
+
+        //Save the file as 'file' and board as 'board'
+        assertEquals(controller.handleSave(),true);
+
+        //Load 'file' and 'board'
+        assertEquals(controller.handleLoad(),true);
+    }
+
+    @Test
+    void alternateSpecialTilePlacement(){
+        board = new Board();
+        game = new Game(board);
+        ScrabbleController controller = new ScrabbleController(game, board);
+        board.setController(controller);
+        game.getStates().add(new GameState(board, game));
+        assertEquals(controller.handleLayout("clustered"),true);
+
+    }
 }

@@ -1,3 +1,4 @@
+import java.io.Serializable;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
@@ -5,7 +6,7 @@ import java.util.*;
 
 import static java.util.Arrays.copyOf;
 
-public class GameState {
+public class GameState implements Serializable {
     private String[] board;
     private Game game;
     private int turn;

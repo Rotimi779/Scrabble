@@ -108,8 +108,8 @@ public class Game implements Serializable {
                 switchTurn();
             }
         }
-        System.out.println("1ST PLAY");
-        System.out.println("Round value is" + round);
+//        System.out.println("1ST PLAY");
+//        System.out.println("Round value is" + round);
 
     }
 

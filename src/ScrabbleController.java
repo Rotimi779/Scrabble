@@ -209,7 +209,7 @@ public class ScrabbleController implements Serializable {
 
     }
 
-    public void handleLayout(String layout){
+    public boolean handleLayout(String layout){
         if (game.round != 1)
         {
             JOptionPane.showMessageDialog(null,"You have passed the first play. You can no longer change the board");
@@ -220,15 +220,19 @@ public class ScrabbleController implements Serializable {
             {
                 case "normal":
                     board.setLayout(board.getButtons(),"normal.xml");
-                    break;
+                    return true;
+                    //break;
                 case "clustered":
                     board.setLayout(board.getButtons(),"clustered.xml");
                     System.out.println("LAYOUT SHOULD CHANGE TO CLUSTERED");
-                    break;
+                    return true;
+                    //break;
                 case "circular":
                     board.setLayout(board.getButtons(),"circular.xml");
-                    break;
+                    return true;
+                    //break;
             }
         }
+        return false;
     }
 }
