@@ -2,7 +2,10 @@ import javax.swing.*;
 import java.awt.*;
 import java.io.Serializable;
 import java.util.*;
-import java.util.List;
+import javax.sound.sampled.*;
+import java.io.*;
+
+
 
 public class Game implements Serializable {
     public static TileBag tilebag;
@@ -16,6 +19,9 @@ public class Game implements Serializable {
     private final Map<String, String> playedList;
     private Stack<GameState> gameStates;
     private Stack<GameState> redoStates;
+    private Clip gameSound;
+    private Clip winSound;
+
 
     public static Set<String> scoredWords = new HashSet<>();
 
@@ -92,22 +98,91 @@ public class Game implements Serializable {
     }
 
     public void play(String word, char direction, int row, int col) {
-        if (currentPlayer instanceof AIPlayer aiPlayer) {
-            System.out.println("This is an AI player");
-            if (aiPlayer.playTurn()) {
-                System.out.println("AIPlayer " + currentPlayer + " has played a tile.");
-                switchTurn();
-            } else {
-                System.out.println("AIPlayer " + currentPlayer + " did not play a tile.");
+        if (round == 1){
+            String audio = JOptionPane.showInputDialog(null,"Enter first,second or third for the audio file you want");
+            try
+            {
+                AudioInputStream gameStream;
+                switch(audio){
+                    case "first":
+                        gameStream = AudioSystem.getAudioInputStream(new File("bleach_aizen_theme.wav"));
+                        gameSound = AudioSystem.getClip();
+                        gameSound.open(gameStream);
+                        break;
+                    case "second":
+                        gameStream = AudioSystem.getAudioInputStream(new File("iron_man.wav"));
+                        gameSound = AudioSystem.getClip();
+                        gameSound.open(gameStream);
+                        break;
+                    case "third":
+                        gameStream = AudioSystem.getAudioInputStream(new File("supa_strikas.wav"));
+                        gameSound = AudioSystem.getClip();
+                        gameSound.open(gameStream);
+                        break;
+                    default :
+                        gameStream = AudioSystem.getAudioInputStream(new File("bleach_aizen_theme.wav"));
+                        gameSound = AudioSystem.getClip();
+                        gameSound.open(gameStream);
+                        break;
+                }
+
+
+                AudioInputStream winStream = AudioSystem.getAudioInputStream(new File("adventure_time.wav"));
+                winSound = AudioSystem.getClip();
+                winSound.open(winStream);
+
+
+                if (gameSound != null)
+                {
+                    gameSound.setFramePosition(0);
+                    gameSound.start();
+                }
             }
-        } else {
-            if (currentPlayer.playTurn(word, direction, row, col)) {
-                // store the words that have been played in the game
-                String value = row + col + String.valueOf(direction);
-                playedList.put(word, value);
-                switchTurn();
+            catch (Exception e)
+            {
+                e.printStackTrace();
             }
         }
+
+
+        if (currentPlayer.getTiles().size() == 0){
+            int max = 0;
+            int index = 1;
+            for(Player p: players){
+                if (p.getPlayerScore() > max){
+                    max = p.getPlayerScore();
+                    index = players.indexOf(currentPlayer);
+                }
+            }
+            gameSound.stop();
+            winSound.start();
+            board.displayWinnerMessage(index + 1);
+        }
+        else{
+            if (currentPlayer instanceof AIPlayer aiPlayer) {
+                System.out.println("This is an AI player");
+                if (aiPlayer.playTurn()) {
+                    System.out.println("AIPlayer " + currentPlayer + " has played a tile.");
+                    switchTurn();
+                } else {
+                    System.out.println("AIPlayer " + currentPlayer + " did not play a tile.");
+                }
+            } else {
+                if (currentPlayer.playTurn(word, direction, row, col)) {
+                    // store the words that have been played in the game
+                    String value = row + col + String.valueOf(direction);
+                    playedList.put(word, value);
+                    switchTurn();
+                }
+            }
+        }
+
+
+
+
+
+
+
 //        System.out.println("1ST PLAY");
 //        System.out.println("Round value is" + round);
 
