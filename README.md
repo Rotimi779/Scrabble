@@ -16,23 +16,16 @@ The game keeps track of every player's score, which is calculated by adding the 
 - **Second turn:** From the second turn, player 2 is initialized with 7 tiles and has to create a word that connects to the word placed on the board by player 1. To do this the player taps on the button where they want their word to start from. If the connection create 2 new words, the player get points from both words.
   
 - **AI player's turn:** The AI player decides what the best word is to play by checking it's tiles and the tiles that have been placed on the board then places it on the board.
+
+- **Undo and Redo:** If you want to undo the last move you can click on undo under the "File" dropdown menu. If you want to then redo the move click on redo.
+  
+- **Saving and Loading:** If you want to save you game you can click on save under the "File" dropdown menu this will save your game and if you want to return to it later you can click on load.
   
 - **End the game:** The game ends when no more tiles in the tile bag and one player uses up the remaining tiles they are holding
   
-## RoadMap
-- **Deliverable 4:** multiple level undo/redo, save/load features and customization of board with alternate premium squares
-
 ## Issues
 ### AI word placement 
 - When deciding where to place sometimes the AI will place a valid word but with the words around it the word should be invalid
-
-
-## Future implementation
-
-### Allowing for 3 and 4 player games
-### Allowing players to quit the game
-### Multiple level undo/redo
-### Save and load features
 
 ## Developers
 Rotimi Ajayi
